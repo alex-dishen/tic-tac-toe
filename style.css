@@ -1,4 +1,9 @@
-:root {}
+:root {
+    --font-14px: 0.875rem;
+    --font-16px: 1rem;
+    --font-18px: 1.125rem;
+    --font-20px: 1.25rem;
+}
 
 body {
     height: 100vh;
@@ -7,7 +12,7 @@ body {
 
     font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
-    font-size: 1.125rem; /*18px*/
+    font-size: var(--font-18px);
 
     background-color: white;
     color: black;
@@ -17,16 +22,71 @@ body {
 
 header {}
 
+h1 {
+    text-align: center;
+}
+
 /* MAIN */
 
-main {}
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    padding: 0 30px;
+}
+
+.playground {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.player-pic {
+    background-color: black;
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+}
+
+.board {
+    display: flex;
+    flex-wrap: wrap;
+    width: 220px;
+    margin: 0 40px;
+    gap: 5px;
+}
+
+.board div {
+    background-color: black;
+    height: 70px;
+    width: 70px;
+    border-radius: 8px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    max-width: 1200px;
+    gap: 15px;
+    margin: 20px auto;
+}
 
 /* FOOTER */
 
 footer {
     text-align: center;
     padding: 10px;
-    font-size: 1.25rem; /*20px*/
+    font-size: var(--font-20px);
     padding-bottom: 22px;
     margin-top: 40px;
 }
