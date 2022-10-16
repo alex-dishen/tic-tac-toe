@@ -1,3 +1,12 @@
+@font-face {
+    font-family: 'GrilledCheese BTN';
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    src: local('GrilledCheese BTN'),
+      url('fonts/GrilledCheese BTN.woff') format('woff');
+}
+
 :root {
     --font-14px: 0.875rem;
     --font-16px: 1rem;
@@ -10,20 +19,22 @@ body {
     display: flex;
     flex-direction: column;
 
-    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    background-image: url(img/symbols-bg.svg),
+    linear-gradient(90deg, #f9cbd3 0%, #c6a8fd 100%);
+    background-size: cover;
+    font-family: 'GrilledCheese BTN', sans-serif;
     font-size: var(--font-18px);
-
-    background-color: white;
-    color: black;
 }
 
 /* HEAD */
 
-header {}
+header {
+    display: flex;
+    justify-content: center;
+}
 
-h1 {
-    text-align: center;
+img[src*="logo"] {
+    margin-top: 20px;
 }
 
 /* MAIN */
@@ -36,60 +47,12 @@ main {
     padding: 0 30px;
 }
 
-.playground {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.player {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-}
-
-.player-pic {
-    background-color: black;
-    height: 80px;
-    width: 80px;
-    border-radius: 50%;
-}
-
-.board {
-    display: flex;
-    flex-wrap: wrap;
-    flex-shrink: 0;
-    height: 360px;
-    width: 360px;
-    padding: 30px;
-    margin: 0 40px;
-}
-
-.board div {
-    background-color: black;
-    height: 100px;
-    width: 100px;
-}
-
-.button-container {
-    display: flex;
-    justify-content: center;
-    max-width: 1200px;
-    gap: 15px;
-    margin: 20px auto;
-}
-
 /* FOOTER */
 
 footer {
     text-align: center;
     padding: 10px;
     font-size: var(--font-20px);
-    padding-bottom: 22px;
-    margin-top: 40px;
 }
 
 .github {
