@@ -12,7 +12,10 @@
     --font-16px: 1rem;
     --font-18px: 1.125rem;
     --font-20px: 1.25rem;
-    
+    --purple: rgb(194, 171, 247);
+    --yellow: rgb(244, 210, 71);
+    --red: rgb(234, 65, 55);
+    --dark-blue: rgb(21, 29, 62);
 }
 
 body {
@@ -73,11 +76,19 @@ main {
 }
 
 .human-label {
-    color: rgb(194, 171, 247);
+    color: var(--purple)
 }
 
 .human-wins {
-    color: ;
+    color: var(--purple);
+}
+
+.robot-label {
+    color: var(--red);
+}
+
+.robot-wins {
+    color: var(--red);
 }
 
 .board {
@@ -97,12 +108,14 @@ main {
 .controllers {
     text-align: center;
     grid-column: 2;
+    color: var(--yellow);
 }
 
 /* FOOTER */
 
 footer {
     text-align: center;
+    color: var(--dark-blue);
     font-size: var(--font-20px);
     padding: 18px;
 }
