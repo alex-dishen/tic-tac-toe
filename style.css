@@ -19,10 +19,22 @@
     --yellow: rgb(244, 210, 71);
     --red: rgb(234, 65, 55);
     --dark-blue: rgb(21, 29, 62);
-    --shadow: -0.1em 0 0.06em var(--dark-blue), 0.1em 0 0.06em var(--dark-blue),
-              0 0.1em 0.06em var(--dark-blue), 0 -0.1em 0.06em var(--dark-blue),
-              -0.1em 0.1em 0.06em var(--dark-blue), 0.1em 0.1em 0.06em var(--dark-blue),
-              -0.1em -0.1em 0.06em var(--dark-blue), 0.1em -0.1em 0.06em var(--dark-blue);
+    --bald-shadow: -0.1em 0 0.06em var(--dark-blue),
+                   0.1em 0 0.06em var(--dark-blue),
+                   0 0.1em 0.06em var(--dark-blue),
+                   0 -0.1em 0.06em var(--dark-blue),
+                   -0.1em 0.1em 0.06em var(--dark-blue),
+                   0.1em 0.1em 0.06em var(--dark-blue),
+                   -0.1em -0.1em 0.06em var(--dark-blue), 
+                   0.1em -0.1em 0.06em var(--dark-blue);
+    --medium-shadow: -0.06em 0 0.08em var(--dark-blue), 
+                     0.06em 0 0.08em var(--dark-blue),
+                     0 0.06em 0.08em var(--dark-blue),
+                     0 -0.06em 0.08em var(--dark-blue),
+                     -0.06em 0.06em 0.08em var(--dark-blue),
+                     0.06em 0.06em 0.08em var(--dark-blue),
+                     -0.06em -0.06em 0.08em var(--dark-blue),
+                     0.06em -0.06em 0.08em var(--dark-blue);
 }
 
 body {
@@ -55,12 +67,13 @@ main {
     display: flex;
     align-items: center;
     flex: 1;
-    padding: 0 30px;
 }
 
 .playground {
     display: grid;
     grid-template:  repeat(2, auto) / repeat(3, auto);
+    grid-template-areas: 'first-player board second-player'
+                         '. controllers .';
     justify-content: space-evenly;
     align-items: center;
     margin: 0 auto;
@@ -85,7 +98,7 @@ main {
     background-color: white;
     text-align: center;
     font-size: var(--font-26px);
-    text-shadow: var(--shadow);
+    text-shadow: var(--bald-shadow);
     border: 4px solid;
     border-radius: 40px;
 }
@@ -111,7 +124,7 @@ main {
 .human-wins, 
 .robot-wins{
     font-size: var(--font-34px);
-    text-shadow: var(--shadow);
+    text-shadow: var(--bald-shadow);
 }
 
 .board {
@@ -119,7 +132,7 @@ main {
     flex-wrap: wrap;
     height: 402px;
     width: 402px;
-
+    grid-area: board;
 }
 
 .square-1 {
@@ -149,7 +162,8 @@ main {
     grid-column: 2;
     color: var(--yellow);
     text-align: center;
-    text-shadow: var(--shadow);
+    text-shadow: var(--bald-shadow);
+    grid-area: controllers;
 }
 
 img[src*='arrow'] {
@@ -158,7 +172,34 @@ img[src*='arrow'] {
 
 .controllers div {
     font-size: var(--font-28px);
-    text-shadow: var(--shadow);
+    text-shadow: var(--bald-shadow);
+}
+
+.small-player {
+    display: none;
+    justify-self: center;
+    align-items: center;
+    gap: 17px;
+    padding: 12px;
+    background-color: white;
+    font-size: var(--font-34px);
+    border: 4px solid black;
+    border-radius: 30px;
+    text-shadow: var(--medium-shadow);
+}
+
+.small-player img {
+    height: 48px;
+}
+
+.first.small-player{
+    grid-area: first-player;
+    color: var(--purple);
+}
+
+.second.small-player {
+    grid-area: second-player;
+    color: var(--red);
 }
 
 /* FOOTER */
@@ -182,4 +223,20 @@ footer {
 
 /* MEDIA QUERIES */
 
-@media (max-width: 0px) {}
+@media (max-width: 800px) {
+    .playground {
+        grid-template:  repeat(3, auto) / repeat(2, auto);
+        grid-template-areas: 'first-player second-player'
+                             'board board'
+                             'controllers controllers';
+        justify-content: center;
+    }
+
+    .player {
+        display: none;
+    }
+
+    .small-player {
+        display: flex;
+    }
+}
