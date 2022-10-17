@@ -55,10 +55,12 @@ body {
 header {
     display: flex;
     justify-content: center;
+    padding: 20px 0;
 }
 
-img[src*="logo"] {
-    margin-top: 20px;
+img[src*='logo'] {
+    max-width: 100%;
+    padding: 0 25px;
 }
 
 /* MAIN */
@@ -79,7 +81,7 @@ main {
     margin: 0 auto;
 
     width: min(1100px, 100%);
-    margin-top: 40px;
+    margin-top: 15px;
     row-gap: 30px;
 }
 
@@ -128,8 +130,8 @@ main {
 }
 
 .board {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
     height: 402px;
     width: 402px;
     grid-area: board;
@@ -153,8 +155,6 @@ main {
 
 .board div {
     background-color: white;
-    height: 134px;
-    width: 134px;
     box-shadow: 0 0 0 4px var(--dark-blue);
 }
 
@@ -167,7 +167,7 @@ main {
 }
 
 img[src*='arrow'] {
-    height: 44px;
+    width: 54px;
 }
 
 .controllers div {
@@ -178,18 +178,21 @@ img[src*='arrow'] {
 .small-player {
     display: none;
     justify-self: center;
+    justify-content: center;
     align-items: center;
     gap: 17px;
-    padding: 12px;
+    width: 130px;
+    height: 73px;
+    padding: 3px;
     background-color: white;
     font-size: var(--font-34px);
-    border: 4px solid black;
+    border: 4px solid var(--dark-blue);
     border-radius: 30px;
     text-shadow: var(--medium-shadow);
 }
 
 .small-player img {
-    height: 48px;
+    width: 44%;
 }
 
 .first.small-player{
@@ -238,5 +241,28 @@ footer {
 
     .small-player {
         display: flex;
+    }
+}
+
+@media (max-width: 590px) {
+    .board {
+        height: 68vw;
+        width: 68vw;
+    }
+
+    .small-player {
+        height: 12.5vw;
+        width: 22vw;
+        font-size: 5.8vw;
+        gap: 2.6vw;
+        border: 3px solid var(--dark-blue);
+    }
+
+    img[src*='arrow'] {
+        width: 9.2vw;
+    }
+
+    .controllers div {
+        font-size: 4.7vw;
     }
 }
