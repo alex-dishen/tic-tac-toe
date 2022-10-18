@@ -9,7 +9,7 @@ modes.forEach(mode => {
     mode.addEventListener('click', () => {
         // const modeName = mode.getAttribute('data-name');
         modeMenu.style.display = 'none';
-        playModePreview.style.display = 'block';
+        playModePreview.style.display = 'flex';
     })
 });
 
