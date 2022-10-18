@@ -76,7 +76,7 @@ main {
 /* menu */
 
 .menu {
-    display: none; /*flex*/
+    display: flex; /*flex*/
     flex-direction: column;
     margin: 0 auto;
     gap: 40px;
@@ -103,7 +103,7 @@ main {
 /* play mode */
 
 .play-mode {
-    display: block; /*block*/
+    display: none; /*block*/
     margin: 0 auto;
 }
 
@@ -114,17 +114,18 @@ main {
     justify-items: center;
     width: 320px;
     padding: 16px 40px;
+    margin-bottom: 30px;
     gap: 22px;
 
     background-color: white;
     color: var(--dark-blue);
     font-size: var(--font-28px);
     border: 4px solid var(--dark-blue);
-    border-radius: 30px;
+    border-radius: 20px;
 }
 
 .prematch-player, 
-.navigation {
+.back-navigation {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -183,9 +184,9 @@ input[placeholder$='2']::placeholder{
     grid-column: 1 / 4;
 }
 
-.navigation {
+.back-navigation {
     gap: 5px;
-    margin-top: 20px;
+    /* margin-top: 20px; */
     color: var(--yellow);
     font-size: var(--font-28px);
     text-shadow: var(--bald-shadow);
@@ -309,13 +310,18 @@ input[placeholder$='2']::placeholder{
 }
 
 .controllers {
-    grid-column: 2;
     color: var(--yellow);
     font-size: var(--font-28px);
     text-align: center;
     text-shadow: var(--bald-shadow);
     grid-area: controllers;
 }
+
+/*     gap: 5px;
+    margin-top: 20px;
+    color: var(--yellow);
+    font-size: var(--font-28px);
+    text-shadow: var(--bald-shadow); */
 
 img[src*='arrow'] {
     width: 54px;

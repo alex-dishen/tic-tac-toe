@@ -17,12 +17,12 @@
 
     <main>
         <div class="menu">
-            <div class="mode">
+            <div class="mode" data-name="twoPlayers">
                 <img src="img/player.svg" alt="Player Emoji">
                 <span>VS</span>
                 <img src="img/player-blue.svg" alt="Player Emoji">
             </div>
-            <div class="mode">
+            <div class="mode" data-name="ai">
                 <img src="img/player.svg" alt="Player Emoji">
                 <span>VS</span>
                 <img src="img/robot.svg" alt="Robot Emoji">
@@ -43,7 +43,7 @@
                 <input type="text" placeholder="Player 2">
                 <button class="fight-button">FIGHT!</button>
             </div>
-            <div class="navigation">
+            <div class="back-navigation">
                 <img src="img/arrow-back.svg" alt="Arrow back">
                 <span>Back</span>
             </div>
@@ -85,8 +85,10 @@
                 <span>0</span>
             </div>
             <div class="controllers">
-                <img src="img/arrow-back.svg" alt="Arrow back">
-                <div>Back</div>
+                <div class="back-navigation">
+                    <img src="img/arrow-back.svg" alt="Arrow back">
+                    <span>Back</span>
+                </div>
             </div>
         </div>
     </main>
