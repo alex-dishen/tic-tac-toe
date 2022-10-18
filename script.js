@@ -13,6 +13,10 @@ modes.forEach(mode => {
         const firstPlayerInput = document.querySelector('.player-1-input');
         const secondPlayerInput = document.querySelector('.player-2-input');
         const aiLevels = document.querySelector('.ai-levels');
+        const opponentWins = document.querySelector('.opponent-wins');
+        const smallOpponentWins = document.querySelector('.small-opponent-wins');
+        const firstPlayerName = document.querySelector('.first-player-name');
+        const secondPlayerName = document.querySelector('.second-player-name');
 
 
         modeMenu.style.display = 'none';
@@ -28,6 +32,23 @@ modes.forEach(mode => {
             aiLevels.style.display = 'none';
             firstPlayerInput.style.display = 'block';
             secondPlayerInput.style.display = 'block';
+            opponentWins.style.color = 'var(--blue)';
+            smallOpponentWins.style.color = 'var(--blue)';
+
+            fightButton.addEventListener('click', () => {        
+                if(firstPlayerInput.value === '') {
+                    firstPlayerName.textContent = 'Player 1';
+                } else {
+                    firstPlayerName.textContent = firstPlayerInput.value;
+                }
+
+                if(secondPlayerInput.value === '') {
+                    secondPlayerName.textContent = 'Player 2'
+                } else {
+                    secondPlayerName.textContent = secondPlayerInput.value;
+                }
+                secondPlayerName.style.color = 'var(--blue)';
+            });
         }
         if(modeName === 'ai') {
             opponentFaces.forEach(opponentFace => {
@@ -39,6 +60,10 @@ modes.forEach(mode => {
             aiLevels.style.display = 'flex';
             firstPlayerInput.style.display = 'none';
             secondPlayerInput.style.display = 'none';
+            firstPlayerName.textContent = 'Human';
+            opponentWins.style.color = 'var(--red)';
+            smallOpponentWins.style.color = 'var(--red)';
+            firstPlayerName.textContent = 'Human';
         }
     })
 });
