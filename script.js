@@ -10,6 +10,11 @@ modes.forEach(mode => {
         const modeName = mode.getAttribute('data-name');
         const opponentFaces = document.querySelectorAll('.opponent-face');
         const opponentSigns = document.querySelectorAll('.opponent-sign');
+        const firstPlayerInput = document.querySelector('.player-1-input');
+        const secondPlayerInput = document.querySelector('.player-2-input');
+        const aiLevels = document.querySelector('.ai-levels');
+
+
         modeMenu.style.display = 'none';
         playModePreview.style.display = 'flex';
 
@@ -20,6 +25,9 @@ modes.forEach(mode => {
             opponentSigns.forEach(opponentSign => {
                 opponentSign.setAttribute('src', 'img/circle-blue.svg');
             });
+            aiLevels.style.display = 'none';
+            firstPlayerInput.style.display = 'block';
+            secondPlayerInput.style.display = 'block';
         }
         if(modeName === 'ai') {
             opponentFaces.forEach(opponentFace => {
@@ -28,6 +36,9 @@ modes.forEach(mode => {
             opponentSigns.forEach(opponentSign => {
                 opponentSign.setAttribute('src', 'img/circle-red.svg');
             });
+            aiLevels.style.display = 'flex';
+            firstPlayerInput.style.display = 'none';
+            secondPlayerInput.style.display = 'none';
         }
     })
 });
