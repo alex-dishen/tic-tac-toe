@@ -7,9 +7,28 @@ const playground = document.querySelector('.playground');
 
 modes.forEach(mode => {
     mode.addEventListener('click', () => {
-        // const modeName = mode.getAttribute('data-name');
+        const modeName = mode.getAttribute('data-name');
+        const opponentFaces = document.querySelectorAll('.opponent-face');
+        const opponentSigns = document.querySelectorAll('.opponent-sign');
         modeMenu.style.display = 'none';
         playModePreview.style.display = 'flex';
+
+        if(modeName === 'twoPlayers') {
+            opponentFaces.forEach(opponentFace => {
+                opponentFace.setAttribute('src', 'img/player-blue.svg');
+            });
+            opponentSigns.forEach(opponentSign => {
+                opponentSign.setAttribute('src', 'img/circle-blue.svg');
+            });
+        }
+        if(modeName === 'ai') {
+            opponentFaces.forEach(opponentFace => {
+                opponentFace.setAttribute('src', 'img/robot.svg');
+            });
+            opponentSigns.forEach(opponentSign => {
+                opponentSign.setAttribute('src', 'img/circle-red.svg');
+            });
+        }
     })
 });
 

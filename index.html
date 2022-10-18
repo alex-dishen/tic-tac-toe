@@ -28,6 +28,7 @@
                 <img src="img/robot.svg" alt="Robot Emoji">
             </div>
         </div>
+
         <div class="play-mode">
             <div class="prematch-info">
                 <div class="prematch-player">
@@ -36,11 +37,16 @@
                 </div>
                 <div>VS</div>
                 <div class="prematch-player">
-                    <img src="img/player-blue.svg" alt="Player Emoji">
-                    <img src="img/circle-blue.svg" alt="Player Emoji">
+                    <img class="opponent-face">
+                    <img class="opponent-sign">
                 </div>
-                <input type="text" placeholder="Player 1">
-                <input type="text" placeholder="Player 2">
+                <input class="player-1-input" type="text" placeholder="Player 1">
+                <input class="player-2-input" type="text" placeholder="Player 2">
+                <div class="ai-levels">
+                    <button class="easy">EASY</button>
+                    <button class="mid">MID</button>
+                    <button class="hard">HARD</button>
+                </div>
                 <button class="fight-button">FIGHT!</button>
             </div>
             <div class="back-navigation">
@@ -48,14 +54,15 @@
                 <span>Back</span>
             </div>
         </div>
+
         <div class="playground">
             <div class="player">
                 <div class="player-info">
                     <img src="img/player.svg" alt="Player Emoji">
                     <img src="img/cross.svg" alt="Cross">
-                    <span class="human-label">Human</span>
+                    <span class="first-player-name"></span>
                 </div>
-                <div class="human-wins">Wins: 0</div>
+                <div class="first-player-wins">Wins: 0</div>
             </div>
             <div class="first small-player">
                 <img src="img/player.svg" alt="Player Emoji">
@@ -74,15 +81,15 @@
             </div>
             <div class="player">
                 <div class="player-info">
-                    <img src="img/robot.svg" alt="Robot Emoji">
-                    <img src="img/circle-red.svg" alt="Circle">
-                    <span class="robot-label">Robot</span>
+                    <img class="opponent-face">
+                    <img class="opponent-sign">
+                    <span class="second-player-name">Robot</span>
                 </div>
-                <div class="robot-wins">Wins: 0</div>
+                <div class="opponent-wins">Wins: 0</div>
             </div>
             <div class="second small-player">
-                <img src="img/robot.svg" alt="Robot Emoji">
-                <span>0</span>
+                <img class="opponent-face">
+                <span class="small-opponent-wins">0</span>
             </div>
             <div class="controllers">
                 <div class="back-navigation">

@@ -25,25 +25,20 @@
     --font-38px: 2.375rem;
     --purple: rgb(194, 171, 247);
     --blue: rgb(128, 198, 250);
+    --green: rgb(135, 252, 79);
     --yellow: hsl(50, 100%, 49%);
+    --orange: rgb(240, 150, 68);
     --red: rgb(234, 65, 55);
+    --dark-red: rgb(207, 17, 0);
     --dark-blue: rgb(21, 29, 62);
-    --bald-shadow: -0.1em 0 0.06em var(--dark-blue),
-                   0.1em 0 0.06em var(--dark-blue),
-                   0 0.1em 0.06em var(--dark-blue),
-                   0 -0.1em 0.06em var(--dark-blue),
-                   -0.1em 0.1em 0.06em var(--dark-blue),
-                   0.1em 0.1em 0.06em var(--dark-blue),
-                   -0.1em -0.1em 0.06em var(--dark-blue), 
-                   0.1em -0.1em 0.06em var(--dark-blue);
-    --medium-shadow: -0.06em 0 0.08em var(--dark-blue), 
-                     0.06em 0 0.08em var(--dark-blue),
-                     0 0.06em 0.08em var(--dark-blue),
-                     0 -0.06em 0.08em var(--dark-blue),
-                     -0.06em 0.06em 0.08em var(--dark-blue),
-                     0.06em 0.06em 0.08em var(--dark-blue),
-                     -0.06em -0.06em 0.08em var(--dark-blue),
-                     0.06em -0.06em 0.08em var(--dark-blue);
+    --bald-shadow: -0.1em 0 0.06em var(--dark-blue), 0.1em 0 0.06em var(--dark-blue),
+                   0 0.1em 0.06em var(--dark-blue), 0 -0.1em 0.06em var(--dark-blue),
+                   -0.1em 0.1em 0.06em var(--dark-blue), 0.1em 0.1em 0.06em var(--dark-blue),
+                   -0.1em -0.1em 0.06em var(--dark-blue), 0.1em -0.1em 0.06em var(--dark-blue);
+    --medium-shadow: -0.06em 0 0.08em var(--dark-blue), 0.06em 0 0.08em var(--dark-blue),
+                     0 0.06em 0.08em var(--dark-blue), 0 -0.06em 0.08em var(--dark-blue),
+                     -0.06em 0.06em 0.08em var(--dark-blue), 0.06em 0.06em 0.08em var(--dark-blue),
+                     -0.06em -0.06em 0.08em var(--dark-blue), 0.06em -0.06em 0.08em var(--dark-blue);
 }
 
 body {
@@ -158,6 +153,7 @@ main {
 }
 
 input[type='text'] {
+    display: none; /*block*/
     height: 50px;
     width: 150%;
     text-align: center;
@@ -186,6 +182,45 @@ input[placeholder='Player 2'] {
 input[placeholder$='2']::placeholder{
     color: var(--blue);
     opacity: 0.6;
+}
+
+.ai-levels {
+    display: none;
+    justify-content: space-between;
+    width: 100%;
+    grid-column: 1 / 4;
+}
+
+.easy, 
+.mid, 
+.hard {
+    color: white;
+    text-shadow: var(--bald-shadow);
+    font-size: var(--font-16px);
+    padding: 8px 14px;
+    border: 4px solid var(--dark-blue);
+    border-radius: 16px;
+    filter: brightness(30%);
+    cursor: pointer;
+}
+
+.easy:hover,
+.mid:hover,
+.hard:hover {
+    filter: brightness(100%);
+    animation: moveUpDown 0.75s ease-in-out infinite;
+}
+
+.easy {
+    background-color: var(--green);
+}
+
+.mid {
+    background-color: var(--orange);
+}
+
+.hard {
+    background-color: var(--dark-red);
 }
 
 .fight-button {
@@ -236,7 +271,7 @@ input[placeholder$='2']::placeholder{
 .player-info {
     display: flex;
     flex-direction: column;
-    width: 130px;
+    width: 146px;
     padding: 20px;
     gap: 20px;
 
@@ -256,18 +291,13 @@ input[placeholder$='2']::placeholder{
     height: 40px;
 }
 
-.human-label,
-.human-wins {
+.first-player-name,
+.first-player-wins {
     color: var(--purple);
 }
 
-.robot-label,
-.robot-wins {
-    color: var(--red);
-}
-
-.human-wins, 
-.robot-wins{
+.first-player-wins, 
+.opponent-wins {
     font-size: var(--font-34px);
     text-shadow: var(--bald-shadow);
 }
@@ -327,7 +357,6 @@ input[placeholder$='2']::placeholder{
 
 .second.small-player {
     grid-area: second-player;
-    color: var(--red);
 }
 
 .controllers {
