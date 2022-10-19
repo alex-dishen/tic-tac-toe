@@ -10,12 +10,12 @@
 @keyframes moveUpDown {
     50% {transform: translateY(-10px);}
 }
+
 @keyframes moveForwardBackward {
     50%  {transform: scale(1.1);}
 }
 
 :root {
-    --font-14px: 0.875rem;
     --font-16px: 1rem;
     --font-18px: 1.125rem;
     --font-20px: 1.25rem;
@@ -109,10 +109,16 @@ main {
 
 /* play mode */
 
-.play-mode {
-    display: none; /*flex*/
+.play-mode,
+.prematch-player, 
+.back-navigation {
+    display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.play-mode {
+    display: none; /*flex*/
     margin: 0 auto;
 }
 
@@ -131,13 +137,6 @@ main {
     font-size: var(--font-28px);
     border: 4px solid var(--dark-blue);
     border-radius: 40px;
-}
-
-.prematch-player, 
-.back-navigation {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 .prematch-player {
@@ -191,6 +190,13 @@ input[placeholder$='2']::placeholder{
     grid-column: 1 / 4;
 }
 
+.easy, .mid, .hard,
+.fight-button {
+    cursor: pointer;
+    border: 4px solid var(--dark-blue);
+    border-radius: 20px;
+}
+
 .easy, 
 .mid, 
 .hard {
@@ -198,10 +204,7 @@ input[placeholder$='2']::placeholder{
     text-shadow: var(--bald-shadow);
     font-size: var(--font-16px);
     padding: 8px 14px;
-    border: 4px solid var(--dark-blue);
-    border-radius: 16px;
     filter: brightness(30%);
-    cursor: pointer;
 }
 
 .easy {
@@ -216,9 +219,7 @@ input[placeholder$='2']::placeholder{
     background-color: var(--dark-red);
 }
 
-.easy:hover,
-.mid:hover,
-.hard:hover,
+.easy:hover, .mid:hover, .hard:hover,
 .chosen-level {
     filter: brightness(100%);
     animation: moveUpDown 0.75s ease-in-out infinite;
@@ -230,10 +231,7 @@ input[placeholder$='2']::placeholder{
     background-color: var(--yellow);
     color: var(--dark-blue);
     font-size: var(--font-38px);
-    border: 4px solid var(--dark-blue);
-    border-radius: 20px;
     grid-column: 1 / 4;
-    cursor: pointer;
 }
 
 .back-navigation {
@@ -322,11 +320,9 @@ input[placeholder$='2']::placeholder{
     background-color: white;
     box-shadow: 0 0 0 4px var(--dark-blue);
 }
-
 .board div:nth-child(1) {
     border-top-left-radius: 40px;
 }
-
 .board div:nth-child(3) {
     border-top-right-radius: 40px;
 }
@@ -338,7 +334,7 @@ input[placeholder$='2']::placeholder{
 }
 
 .small-player {
-    display: none;
+    display: none; /*flex*/
     justify-self: center;
     justify-content: center;
     align-items: center;
@@ -346,6 +342,7 @@ input[placeholder$='2']::placeholder{
     width: 130px;
     height: 73px;
     padding: 3px;
+    
     background-color: white;
     font-size: var(--font-34px);
     border: 4px solid var(--dark-blue);
