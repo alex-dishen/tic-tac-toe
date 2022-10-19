@@ -97,6 +97,12 @@ modes.forEach(mode => {
                 level.classList.add('hard');
                 level.textContent = 'HARD'
             });
+            fightButton.addEventListener('click', () => {
+                if(level.getAttribute('class') === null) {
+                    level.classList.add('mid');
+                    level.textContent = 'MID';
+                }
+            });
         }
     })
 });
