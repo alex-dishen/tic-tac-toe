@@ -17,7 +17,7 @@ modes.forEach(mode => {
         const smallOpponentWins = document.querySelector('.small-opponent-wins');
         const firstPlayerName = document.querySelector('.first-player-name');
         const secondPlayerName = document.querySelector('.second-player-name');
-
+        const level = document.getElementById('level');
 
         modeMenu.style.display = 'none';
         playModePreview.style.display = 'flex';
@@ -34,7 +34,8 @@ modes.forEach(mode => {
             secondPlayerInput.style.display = 'block';
             opponentWins.style.color = 'var(--blue)';
             smallOpponentWins.style.color = 'var(--blue)';
-
+            secondPlayerName.style.display = 'block';
+            
             fightButton.addEventListener('click', () => {        
                 if(firstPlayerInput.value === '') {
                     firstPlayerName.textContent = 'Player 1';
@@ -49,8 +50,12 @@ modes.forEach(mode => {
                 }
                 secondPlayerName.style.color = 'var(--blue)';
             });
+            level.style.display = 'none';
         }
         if(modeName === 'ai') {
+            const easyLevel = document.querySelector('.easy');
+            const midLevel = document.querySelector('.mid');
+            const hardLevel = document.querySelector('.hard');
             opponentFaces.forEach(opponentFace => {
                 opponentFace.setAttribute('src', 'img/robot.svg');
             });
@@ -64,6 +69,20 @@ modes.forEach(mode => {
             opponentWins.style.color = 'var(--red)';
             smallOpponentWins.style.color = 'var(--red)';
             firstPlayerName.textContent = 'Human';
+            secondPlayerName.style.display = 'none';
+            level.style.display = 'block';
+            easyLevel.addEventListener('click', () => {
+                level.classList.add('easy');
+                level.textContent = 'EASY'
+            });
+            midLevel.addEventListener('click', () => {
+                level.classList.add('mid');
+                level.textContent = 'MID'
+            });
+            hardLevel.addEventListener('click', () => {
+                level.classList.add('hard');
+                level.textContent = 'HARD'
+            });
         }
     })
 });

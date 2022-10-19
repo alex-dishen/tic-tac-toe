@@ -204,13 +204,6 @@ input[placeholder$='2']::placeholder{
     cursor: pointer;
 }
 
-.easy:hover,
-.mid:hover,
-.hard:hover {
-    filter: brightness(100%);
-    animation: moveUpDown 0.75s ease-in-out infinite;
-}
-
 .easy {
     background-color: var(--green);
 }
@@ -221,6 +214,13 @@ input[placeholder$='2']::placeholder{
 
 .hard {
     background-color: var(--dark-red);
+}
+
+.easy:hover,
+.mid:hover,
+.hard:hover {
+    filter: brightness(100%);
+    animation: moveUpDown 0.75s ease-in-out infinite;
 }
 
 .fight-button {
@@ -289,6 +289,12 @@ input[placeholder$='2']::placeholder{
 
 .player-info img:nth-child(2) {
     height: 40px;
+}
+
+#level {
+    filter: brightness(100%);
+    animation: none;
+    cursor: default;
 }
 
 .first-player-name,
