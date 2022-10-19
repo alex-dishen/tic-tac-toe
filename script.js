@@ -51,6 +51,12 @@ modes.forEach(mode => {
                 secondPlayerName.style.color = 'var(--blue)';
             });
             level.style.display = 'none';
+            backBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    firstPlayerInput.value = '';
+                    secondPlayerInput.value = '';
+                });
+            });
         }
         if(modeName === 'ai') {
             const easyLevel = document.querySelector('.easy');
@@ -68,7 +74,6 @@ modes.forEach(mode => {
             firstPlayerName.textContent = 'Human';
             opponentWins.style.color = 'var(--red)';
             smallOpponentWins.style.color = 'var(--red)';
-            firstPlayerName.textContent = 'Human';
             secondPlayerName.style.display = 'none';
             level.style.display = 'block';
             easyLevel.addEventListener('click', () => {
@@ -98,10 +103,18 @@ modes.forEach(mode => {
                 level.textContent = 'HARD'
             });
             fightButton.addEventListener('click', () => {
+                firstPlayerName.textContent = 'Human';
                 if(level.getAttribute('class') === null) {
                     level.classList.add('mid');
                     level.textContent = 'MID';
                 }
+            });
+            backBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                easyLevel.classList.remove('chosen-level');
+                midLevel.classList.remove('chosen-level');
+                hardLevel.classList.remove('chosen-level');
+                });
             });
         }
     })
