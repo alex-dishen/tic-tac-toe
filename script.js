@@ -35,7 +35,7 @@ modes.forEach(mode => {
             opponentWins.style.color = 'var(--blue)';
             smallOpponentWins.style.color = 'var(--blue)';
             secondPlayerName.style.display = 'block';
-            
+
             fightButton.addEventListener('click', () => {        
                 if(firstPlayerInput.value === '') {
                     firstPlayerName.textContent = 'Player 1';
@@ -72,14 +72,19 @@ modes.forEach(mode => {
             secondPlayerName.style.display = 'none';
             level.style.display = 'block';
             easyLevel.addEventListener('click', () => {
+                //if user changes levels a few times the classes will be stored in an element
+                //to prevent errors we clean element from classes every single time
+                level.removeAttribute('class');
                 level.classList.add('easy');
                 level.textContent = 'EASY'
             });
             midLevel.addEventListener('click', () => {
+                level.removeAttribute('class');
                 level.classList.add('mid');
                 level.textContent = 'MID'
             });
             hardLevel.addEventListener('click', () => {
+                level.removeAttribute('class');
                 level.classList.add('hard');
                 level.textContent = 'HARD'
             });
