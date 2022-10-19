@@ -72,6 +72,9 @@ modes.forEach(mode => {
             secondPlayerName.style.display = 'none';
             level.style.display = 'block';
             easyLevel.addEventListener('click', () => {
+                easyLevel.classList.add('chosen-level');
+                midLevel.classList.remove('chosen-level');
+                hardLevel.classList.remove('chosen-level');
                 //if user changes levels a few times the classes will be stored in an element
                 //to prevent errors we clean element from classes every single time
                 level.removeAttribute('class');
@@ -79,11 +82,17 @@ modes.forEach(mode => {
                 level.textContent = 'EASY'
             });
             midLevel.addEventListener('click', () => {
+                midLevel.classList.add('chosen-level');
+                easyLevel.classList.remove('chosen-level');
+                hardLevel.classList.remove('chosen-level');
                 level.removeAttribute('class');
                 level.classList.add('mid');
                 level.textContent = 'MID'
             });
             hardLevel.addEventListener('click', () => {
+                hardLevel.classList.add('chosen-level');
+                midLevel.classList.remove('chosen-level');
+                easyLevel.classList.remove('chosen-level');
                 level.removeAttribute('class');
                 level.classList.add('hard');
                 level.textContent = 'HARD'

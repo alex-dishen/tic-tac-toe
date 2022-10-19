@@ -218,7 +218,8 @@ input[placeholder$='2']::placeholder{
 
 .easy:hover,
 .mid:hover,
-.hard:hover {
+.hard:hover,
+.chosen-level {
     filter: brightness(100%);
     animation: moveUpDown 0.75s ease-in-out infinite;
 }
