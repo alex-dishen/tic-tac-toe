@@ -78,7 +78,7 @@ main {
 /* menu */
 
 .menu {
-    display: flex; /*flex*/
+    display: none; /*flex*/
     flex-direction: column;
     margin: 0 auto;
     gap: 40px;
@@ -249,7 +249,7 @@ input[placeholder$='2']::placeholder{
 /* playground */
 
 .playground {
-    display: none; /*grid*/
+    display: grid; /*grid*/
     grid-template:  repeat(2, auto) / repeat(3, auto);
     grid-template-areas: 'first-player board second-player'
                          '. controllers .';
@@ -434,7 +434,7 @@ footer {
     }
 
     .small-player {
-        display: flex;
+        display: none;
     }
 }
 
