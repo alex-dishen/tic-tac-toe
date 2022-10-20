@@ -317,6 +317,9 @@ input[placeholder$='2']::placeholder{
 }
 
 .board div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: white;
     box-shadow: 0 0 0 4px var(--dark-blue);
 }

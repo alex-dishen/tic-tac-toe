@@ -1,10 +1,38 @@
-const Player = (name) => {};
+const Player = (name, sign) => {
+    return {name, sign}
+};
 
 const gameBoard = (() => {
+    // const firstPlayer = Player('x');
+    // const secondPlayer = Player('o');
+
     const board = ['', '', '', '', '', '', '', '', ''];
+
+    const showTheSign = () => {
+        // for (const sign of board) {
+        //     console.log(sign)
+        // }
+        const boardSquares = document.querySelectorAll('.square');
+        boardSquares.forEach(square => {
+            square.addEventListener('click', () => {
+                const squareIndex = square.getAttribute('data-index');
+                const sign = board[squareIndex];
+                const img = document.createElement('img');
+                img.setAttribute('src', 'img/circle-blue.svg');
+                square.appendChild(img);
+            });
+        });
+    };
+
+    return { board, showTheSign}
 })();
 
+gameBoard.showTheSign();
+
 const displayController = (() => {
+    let firstPlayer;
+    let secondPlayer;
+    
     // MODE MENU
     const modeMenu = document.querySelector('.menu');
     const modes = document.querySelectorAll('.mode');
@@ -86,13 +114,15 @@ const displayController = (() => {
     };
 
     const setPlaygroundForPlayers = () => {
+        firstPlayer = Player(firstPlayerInput.value || 'Player 1', 'img/cross.svg');
+        secondPlayer = Player(secondPlayerInput.value || 'Player 2', 'img/circle-blue.svg');
         opponentWins.style.color = 'var(--blue)';
         smallOpponentWins.style.color = 'var(--blue)';
         secondPlayerName.style.color = 'var(--blue)';
         level.style.display = 'none';
         secondPlayerName.style.display = 'block';
-        firstPlayerName.textContent = firstPlayerInput.value || 'Player 1';
-        secondPlayerName.textContent = secondPlayerInput.value || 'Player 2';
+        firstPlayerName.textContent = firstPlayer.name;
+        secondPlayerName.textContent = secondPlayer.name;
     };
 
     const setPlaygroundForAi = () => {
@@ -164,6 +194,8 @@ const displayController = (() => {
     backBtns.forEach(btn => {
         btn.addEventListener('click', () => {clearPrematch.showModeMenu()});
     });
+
+    return { firstPlayer, secondPlayer }
 })();
 
 const gameController = (() => {})();
