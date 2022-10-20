@@ -6,7 +6,7 @@ const Player = (name, sign) => {
 };
 
 const gameBoard = (() => {
-    const board = ['', '', '', '', '', '', '', '', ''];
+    let board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
     const fillWithX = (squareIndex) => {
         board[squareIndex] = 'x';
@@ -14,9 +14,13 @@ const gameBoard = (() => {
 
     const fillWithO = (squareIndex) => {
         board[squareIndex] = 'o';
-    }
+    };
+    
+    const resetBoard = () => {
+        board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    };
 
-    return { fillWithX, fillWithO, board }
+    return { fillWithX, fillWithO, resetBoard, board };
 })();
 
 const gameController = (() => {
@@ -32,7 +36,7 @@ const gameController = (() => {
 
     const decideWhoseTurn = (square) => {
         squareIndex = square.getAttribute('data-index'); 
-        if(!gameBoard.board[squareIndex] == '') return;
+        if(!typeof(gameBoard.board[squareIndex]) == 'number') return;
 
         const img = document.createElement('img');
         if(firstPlayerTurn) {
@@ -211,6 +215,13 @@ const displayController = (() => {
             });
         }
     };
+
+    const clearBoard = () => {
+        boardSquares.forEach(square => {
+            square.replaceChildren();
+            gameBoard.resetBoard();
+        });
+    }
     
     modes.forEach(mode => {
         mode.addEventListener('click', () => {play(mode)})
@@ -222,7 +233,11 @@ const displayController = (() => {
     });
 
     backBtns.forEach(btn => {
-        btn.addEventListener('click', () => {clearPrematch.showModeMenu()});
+        btn.addEventListener('click', () => {
+            clearPrematch.showModeMenu();
+            clearBoard();
+
+        });
     });
 
     boardSquares.forEach(square => {
