@@ -1,8 +1,5 @@
 let firstPlayer;
 let secondPlayer;
-let firstPlayerTurn = true;
-let secondPlayerTurn = false;
-let squareIndex;
 
 const Player = (name, sign) => {
     return {name, sign}
@@ -11,11 +8,11 @@ const Player = (name, sign) => {
 const gameBoard = (() => {
     const board = ['', '', '', '', '', '', '', '', ''];
 
-    const fillWithX = () => {
+    const fillWithX = (squareIndex) => {
         board[squareIndex] = 'x';
     };
 
-    const fillWithO = () => {
+    const fillWithO = (squareIndex) => {
         board[squareIndex] = 'o';
     }
 
@@ -23,36 +20,41 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-    const decideWhoseTurn = () => {
-        const playerInfo = document.querySelector('.player-info');
-        const opponentInfo = document.querySelector('.opponent-info');
-        const boardSquares = document.querySelectorAll('.square');
-        playerInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
+    let firstPlayerTurn = true;
+    let secondPlayerTurn = false;
+    let squareIndex;
+    const playerInfo = document.querySelector('.player-info');
+    const opponentInfo = document.querySelector('.opponent-info');
+    const firstSmallPlayer = document.querySelector('.first.small-player');
+    const secondSmallPlayer = document.querySelector('.second.small-player');
+    playerInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
+    firstSmallPlayer.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
 
-        boardSquares.forEach(square => {
-            square.addEventListener('click', () => {
-                squareIndex = square.getAttribute('data-index'); 
-                if(!gameBoard.board[squareIndex] == '') return;
+    const decideWhoseTurn = (square) => {
+        squareIndex = square.getAttribute('data-index'); 
+        if(!gameBoard.board[squareIndex] == '') return;
 
-                const img = document.createElement('img');
-                if(firstPlayerTurn) {
-                    playerInfo.removeAttribute('style');
-                    opponentInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
-                    img.setAttribute('src', `${firstPlayer.sign}`);
-                    gameBoard.fillWithX();
-                    secondPlayerTurn = true;
-                    firstPlayerTurn = false;
-                } else if(secondPlayerTurn) {
-                    opponentInfo.removeAttribute('style');
-                    playerInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
-                    img.setAttribute('src', `${secondPlayer.sign}`);
-                    gameBoard.fillWithO();
-                    firstPlayerTurn = true;
-                    secondPlayerTurn = false;
-                }
-                square.appendChild(img);
-            });
-        });
+        const img = document.createElement('img');
+        if(firstPlayerTurn) {
+            playerInfo.removeAttribute('style');
+            firstSmallPlayer.removeAttribute('style');
+            opponentInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
+            secondSmallPlayer.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
+            img.setAttribute('src', `${firstPlayer.sign}`);
+            gameBoard.fillWithX(squareIndex);
+            secondPlayerTurn = true;
+            firstPlayerTurn = false;
+        } else if(secondPlayerTurn) {
+            opponentInfo.removeAttribute('style');
+            secondSmallPlayer.removeAttribute('style');
+            playerInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
+            firstSmallPlayer.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
+            img.setAttribute('src', `${secondPlayer.sign}`);
+            gameBoard.fillWithO(squareIndex);
+            firstPlayerTurn = true;
+            secondPlayerTurn = false;
+        }
+        square.appendChild(img);
     };
 
     return { decideWhoseTurn }
@@ -86,6 +88,7 @@ const displayController = (() => {
     // PLAYGROUND
     const playground = document.querySelector('.playground');
     const level = document.getElementById('level');
+    const boardSquares = document.querySelectorAll('.square');
 
     const showTwoPlayersPrematch = () => {
         opponentFaces.forEach(opponentFace => {
@@ -222,5 +225,8 @@ const displayController = (() => {
         btn.addEventListener('click', () => {clearPrematch.showModeMenu()});
     });
 
-    gameController.decideWhoseTurn();
+    boardSquares.forEach(square => {
+        square.addEventListener('click', () => {
+            gameController.decideWhoseTurn(square);
+        })});
 })();

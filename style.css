@@ -323,6 +323,7 @@ input[placeholder$='2']::placeholder{
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
     background-color: white;
     box-shadow: 0 0 0 4px var(--dark-blue);
 }
@@ -337,6 +338,10 @@ input[placeholder$='2']::placeholder{
 }
 .board div:nth-child(9) {
     border-bottom-right-radius: 40px;
+}
+
+.board div img {
+    width: 65%;
 }
 
 .small-player {
