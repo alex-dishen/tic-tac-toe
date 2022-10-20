@@ -1,24 +1,37 @@
+let firstPlayer;
+let secondPlayer;
+let firstPlayerTurn = true;
+let secondPlayerTurn = false;
+
 const Player = (name, sign) => {
     return {name, sign}
 };
 
 const gameBoard = (() => {
-    // const firstPlayer = Player('x');
-    // const secondPlayer = Player('o');
-
+    const playerInfo = document.querySelector('.player-info');
+    const opponentInfo = document.querySelector('.opponent-info');
     const board = ['', '', '', '', '', '', '', '', ''];
 
     const showTheSign = () => {
-        // for (const sign of board) {
-        //     console.log(sign)
-        // }
         const boardSquares = document.querySelectorAll('.square');
         boardSquares.forEach(square => {
+            playerInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
             square.addEventListener('click', () => {
-                const squareIndex = square.getAttribute('data-index');
-                const sign = board[squareIndex];
                 const img = document.createElement('img');
-                img.setAttribute('src', 'img/circle-blue.svg');
+                if(firstPlayerTurn) {
+                    // animation: moveUpDown 0.75s ease-in-out infinite;
+                    playerInfo.removeAttribute('style');
+                    opponentInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
+                    img.setAttribute('src', `${firstPlayer.sign}`);
+                    secondPlayerTurn = true;
+                    firstPlayerTurn = false;
+                } else if(secondPlayerTurn) {
+                    opponentInfo.removeAttribute('style');
+                    playerInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
+                    img.setAttribute('src', `${secondPlayer.sign}`);
+                    firstPlayerTurn = true;
+                    secondPlayerTurn = false;
+                }
                 square.appendChild(img);
             });
         });
@@ -30,8 +43,6 @@ const gameBoard = (() => {
 gameBoard.showTheSign();
 
 const displayController = (() => {
-    let firstPlayer;
-    let secondPlayer;
     
     // MODE MENU
     const modeMenu = document.querySelector('.menu');
@@ -198,4 +209,7 @@ const displayController = (() => {
     return { firstPlayer, secondPlayer }
 })();
 
-const gameController = (() => {})();
+const gameController = (() => {
+    // if first player turn - first player turn = true, second player turn false
+    // if second player turn - second player turn = true, first player turn false
+})();

@@ -267,7 +267,8 @@ input[placeholder$='2']::placeholder{
     margin-top: 15px;
 }
 
-.player-info {
+.player-info,
+.opponent-info {
     display: flex;
     flex-direction: column;
     width: 146px;
@@ -282,11 +283,13 @@ input[placeholder$='2']::placeholder{
     border-radius: 40px;
 }
 
-.player-info img:first-child {
+.player-info img:first-child,
+.opponent-info img:first-child {
     height: 56px;
 }
 
-.player-info img:nth-child(2) {
+.player-info img:nth-child(2),
+.opponent-info img:nth-child(2){
     height: 40px;
 }
 
