@@ -311,6 +311,7 @@ input[placeholder$='2']::placeholder{
 }
 
 .board {
+    position: relative;
     display: grid;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
     height: 402px;
@@ -338,6 +339,20 @@ input[placeholder$='2']::placeholder{
 }
 .board div:nth-child(9) {
     border-bottom-right-radius: 40px;
+}
+
+div .overlay {
+    display: none; /*flex*/
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    background-color: var(--dark-blue);
+    color: white;
+    font-size: var(--font-38px);
+    text-shadow: var(--medium-shadow);
+    opacity: 0.96;
+    border-radius: 40px;
 }
 
 .board div img {
