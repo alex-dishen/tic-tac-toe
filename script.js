@@ -3,7 +3,7 @@ const Player = (boardSign, arraySign) => {
 }
 
 const gameBoard = (() => {
-    const board = [null, null, null, null, null, null, null, null, null];
+    const board = ['', '', '', '', '', '', '', '', ''];
 
     const addSignToBoard = (index, sign) => {
         board[index] = sign;
@@ -15,15 +15,15 @@ const gameBoard = (() => {
 const gameController = (() => {
     const playerOne = Player('img/cross.svg', 'X');
     const playerTwo = Player('img/circle-blue.svg', 'O');
-    let currentPlayer = playerOne;
-    let boardPlayer = playerOne;
+    let currentPlayer;
+    let boardPlayer;
 
     const squares = document.querySelectorAll('.square');
 
     const handleSquareClick = (e) => {
         let squareIndex = e.target.id;
         
-        if(!gameBoard.board[squareIndex]) {
+        if(gameBoard.board[squareIndex] === '') {
             currentPlayer = currentPlayer === playerOne.arraySign ? 
                             playerTwo.arraySign : playerOne.arraySign;
             boardPlayer = boardPlayer === playerOne.boardSign ? 
@@ -33,7 +33,6 @@ const gameController = (() => {
             img.setAttribute('src', `${boardPlayer}`);
             e.target.appendChild(img);
         }
-
         setWinner(currentPlayer);
     };
 
