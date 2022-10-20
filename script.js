@@ -2,33 +2,51 @@ let firstPlayer;
 let secondPlayer;
 let firstPlayerTurn = true;
 let secondPlayerTurn = false;
+let squareIndex;
 
 const Player = (name, sign) => {
     return {name, sign}
 };
 
 const gameBoard = (() => {
-    const playerInfo = document.querySelector('.player-info');
-    const opponentInfo = document.querySelector('.opponent-info');
     const board = ['', '', '', '', '', '', '', '', ''];
 
-    const showTheSign = () => {
+    const fillWithX = () => {
+        board[squareIndex] = 'x';
+    };
+
+    const fillWithO = () => {
+        board[squareIndex] = 'o';
+    }
+
+    return { fillWithX, fillWithO, board }
+})();
+
+const gameController = (() => {
+    const decideWhoseTurn = () => {
+        const playerInfo = document.querySelector('.player-info');
+        const opponentInfo = document.querySelector('.opponent-info');
         const boardSquares = document.querySelectorAll('.square');
+        playerInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
+
         boardSquares.forEach(square => {
-            playerInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
             square.addEventListener('click', () => {
+                squareIndex = square.getAttribute('data-index'); 
+                if(!gameBoard.board[squareIndex] == '') return;
+
                 const img = document.createElement('img');
                 if(firstPlayerTurn) {
-                    // animation: moveUpDown 0.75s ease-in-out infinite;
                     playerInfo.removeAttribute('style');
                     opponentInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
                     img.setAttribute('src', `${firstPlayer.sign}`);
+                    gameBoard.fillWithX();
                     secondPlayerTurn = true;
                     firstPlayerTurn = false;
                 } else if(secondPlayerTurn) {
                     opponentInfo.removeAttribute('style');
                     playerInfo.style.animation = 'moveUpDown 0.75s ease-in-out infinite';
                     img.setAttribute('src', `${secondPlayer.sign}`);
+                    gameBoard.fillWithO();
                     firstPlayerTurn = true;
                     secondPlayerTurn = false;
                 }
@@ -37,10 +55,8 @@ const gameBoard = (() => {
         });
     };
 
-    return { board, showTheSign}
+    return { decideWhoseTurn }
 })();
-
-gameBoard.showTheSign();
 
 const displayController = (() => {
     
@@ -206,10 +222,5 @@ const displayController = (() => {
         btn.addEventListener('click', () => {clearPrematch.showModeMenu()});
     });
 
-    return { firstPlayer, secondPlayer }
-})();
-
-const gameController = (() => {
-    // if first player turn - first player turn = true, second player turn false
-    // if second player turn - second player turn = true, first player turn false
+    gameController.decideWhoseTurn();
 })();
