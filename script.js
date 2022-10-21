@@ -3,7 +3,9 @@ const Player = (boardSign, arraySign) => {
 }
 
 const gameBoard = (() => {
-    const board = ['', '', '', '', '', '', '', '', ''];
+    // The array contains numbers instead of ['', ''] && [null, null] to way
+    //easier find an index to put the sign under, when the bot makes his choice
+    const board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
     //     BOARD
     //  [0] [1] [2]
@@ -30,9 +32,9 @@ const gameBoard = (() => {
 const gameController = (() => {
     const playerOne = Player('img/cross.svg', 'X');
     const playerTwo = Player('img/circle-blue.svg', 'O');
-    const bot = Player('img/circle-red.svg', 'O');
+    const botPlayer = Player('img/circle-red.svg', 'O');
     let currentPlayer;
-    let boardPlayer;
+    let UIPlayer;
 
     const squares = document.querySelectorAll('.square');
 
@@ -40,68 +42,65 @@ const gameController = (() => {
         // e.target === square user clicked
         const squareIndex = e.target.id;
         
-        if(gameBoard.board[squareIndex] === '') {
+        if(typeof gameBoard.board[squareIndex] === 'number') {
             // currentPlayer = currentPlayer === playerOne.arraySign ? 
             //                  playerTwo.arraySign : playerOne.arraySign;
-            // boardPlayer = boardPlayer === playerOne.boardSign ? 
+            // UIPlayer = UIPlayer === playerOne.boardSign ? 
             //                playerTwo.boardSign : playerOne.boardSign;
             const img = document.createElement('img');
             gameBoard.addSignToBoard(squareIndex, /*currentPlayer*/ playerOne.arraySign);
-            img.setAttribute('src', `${/*boardPlayer*/ playerOne.boardSign}`);
+            img.setAttribute('src', `${/*UIPlayer*/ playerOne.boardSign}`);
             e.target.appendChild(img);
             randomBotMove();
         }
 
-        findTheWinner();
+        indicateTheWinner();
     };
 
-    const findTheWinner = () => {
+    const indicateTheWinner = () => {
         //'.some' searches for at least one combination that meets our criteria
         //'.every' checks every single combinations number, and if every number
         // inside of any combination contains the same sign it returns 'true',
         // and it means that '.every' found the winning combination.
-        const winner = gameBoard.winningCombinations.some(combination => {
+        const isWinner = gameBoard.winningCombinations.some(combination => {
             return combination.every(index => {
                 return gameBoard.board[index] === currentPlayer;
             })
         });
 
-        if(winner) {
-            console.log(`${currentPlayer}`)
-        }
-
-        const tie = gameBoard.board.every(index => {
+        const isTie = gameBoard.board.every(index => {
             return index !== '';
         })
 
-        if(!winner && tie) {
-            console.log('tie')
+        if(isWinner) {
+            return `${currentPlayer}`;
+        }
+
+        if(!isWinner && isTie) {
+            return 'It\'s a tie'
         }
     };
 
     const getEmptySpots = () => {
-       const emptySpots = gameBoard.board.filter(
-        index => {return index === ''}
-        );
-
-        return emptySpots
+        return gameBoard.board.filter(index => {
+            return typeof index === 'number'
+        });
     };
 
     const randomBotMove = () => {
+        const emptySpots = getEmptySpots();
         const img = document.createElement('img');
-        const randomIndex = Math.floor(Math.random() * 8);
+        const randomIndex = Math.floor(Math.random() * emptySpots.length);
 
-        for(let i = 0; i < 5; i++) {}
-
-        if(gameBoard.board[randomIndex] === '') {
-            gameBoard.addSignToBoard(randomIndex, bot.arraySign);
-            const square = document.getElementById(`${randomIndex}`);
-            img.setAttribute('src', `${bot.boardSign}`);
-            square.appendChild(img);
-        }
+        gameBoard.addSignToBoard(emptySpots[randomIndex], botPlayer.arraySign);
+        const square = document.getElementById(`${emptySpots[randomIndex]}`);
+        img.setAttribute('src', `${botPlayer.boardSign}`);
+        square.appendChild(img);
     };
 
     squares.forEach(square => {
         square.addEventListener('click', (e) => {handleSquareClick(e)});
     });
 })();
+
+const displayController = (() => {})();
