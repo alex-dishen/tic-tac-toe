@@ -30,6 +30,7 @@ const gameBoard = (() => {
 const gameController = (() => {
     const playerOne = Player('img/cross.svg', 'X');
     const playerTwo = Player('img/circle-blue.svg', 'O');
+    const bot = Player('img/circle-red.svg', 'O');
     let currentPlayer;
     let boardPlayer;
 
@@ -40,14 +41,15 @@ const gameController = (() => {
         const squareIndex = e.target.id;
         
         if(gameBoard.board[squareIndex] === '') {
-            currentPlayer = currentPlayer === playerOne.arraySign ? 
-                             playerTwo.arraySign : playerOne.arraySign;
-            boardPlayer = boardPlayer === playerOne.boardSign ? 
-                           playerTwo.boardSign : playerOne.boardSign;
+            // currentPlayer = currentPlayer === playerOne.arraySign ? 
+            //                  playerTwo.arraySign : playerOne.arraySign;
+            // boardPlayer = boardPlayer === playerOne.boardSign ? 
+            //                playerTwo.boardSign : playerOne.boardSign;
             const img = document.createElement('img');
-            gameBoard.addSignToBoard(squareIndex, currentPlayer);
-            img.setAttribute('src', `${boardPlayer}`);
+            gameBoard.addSignToBoard(squareIndex, /*currentPlayer*/ playerOne.arraySign);
+            img.setAttribute('src', `${/*boardPlayer*/ playerOne.boardSign}`);
             e.target.appendChild(img);
+            randomBotMove();
         }
 
         findTheWinner();
@@ -74,6 +76,28 @@ const gameController = (() => {
 
         if(!winner && tie) {
             console.log('tie')
+        }
+    };
+
+    const getEmptySpots = () => {
+       const emptySpots = gameBoard.board.filter(
+        index => {return index === ''}
+        );
+
+        return emptySpots
+    };
+
+    const randomBotMove = () => {
+        const img = document.createElement('img');
+        const randomIndex = Math.floor(Math.random() * 8);
+
+        for(let i = 0; i < 5; i++) {}
+
+        if(gameBoard.board[randomIndex] === '') {
+            gameBoard.addSignToBoard(randomIndex, bot.arraySign);
+            const square = document.getElementById(`${randomIndex}`);
+            img.setAttribute('src', `${bot.boardSign}`);
+            square.appendChild(img);
         }
     };
 
