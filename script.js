@@ -5,11 +5,26 @@ const Player = (boardSign, arraySign) => {
 const gameBoard = (() => {
     const board = ['', '', '', '', '', '', '', '', ''];
 
+    //     BOARD
+    //  [0] [1] [2]
+    //  [3] [4] [5]
+    //  [6] [7] [8]
+    const winningCombinations = [
+        [0, 1, 2],
+        [0, 3, 6],
+        [0, 4, 8],
+        [2, 5, 8],
+        [2, 4, 6],
+        [3, 4, 5],
+        [7, 6, 8],
+        [7, 4, 1]
+    ];
+
     const addSignToBoard = (index, sign) => {
         board[index] = sign;
     };
 
-    return { board, addSignToBoard };
+    return { board, addSignToBoard, winningCombinations };
 })();
 
 const gameController = (() => {
@@ -21,53 +36,36 @@ const gameController = (() => {
     const squares = document.querySelectorAll('.square');
 
     const handleSquareClick = (e) => {
-        let squareIndex = e.target.id;
+        // e.target === square user clicked
+        const squareIndex = e.target.id;
         
         if(gameBoard.board[squareIndex] === '') {
             currentPlayer = currentPlayer === playerOne.arraySign ? 
-                            playerTwo.arraySign : playerOne.arraySign;
+                             playerTwo.arraySign : playerOne.arraySign;
             boardPlayer = boardPlayer === playerOne.boardSign ? 
-                          playerTwo.boardSign : playerOne.boardSign;
+                           playerTwo.boardSign : playerOne.boardSign;
             const img = document.createElement('img');
             gameBoard.addSignToBoard(squareIndex, currentPlayer);
             img.setAttribute('src', `${boardPlayer}`);
             e.target.appendChild(img);
         }
-        setWinner(currentPlayer);
+
+        findTheWinner();
     };
 
-    const setWinner = (player) => {
-        if(gameBoard.board[0] === player){
-            if(gameBoard.board[1] === player && gameBoard.board[2] === player) {
-                console.log('you won')
-            }
-            if(gameBoard.board[3] === player && gameBoard.board[6] === player) {
-                console.log('you won')
-            }
-            if(gameBoard.board[4] === player && gameBoard.board[8] === player) {
-                console.log('you won')
-            }
-        }
-        if(gameBoard.board[2] === player){
-            if(gameBoard.board[5] === player && gameBoard.board[8] === player) {
-                console.log('you won')
-            }
-            if(gameBoard.board[4] === player && gameBoard.board[6] === player) {
-                console.log('you won')
-            }
-        }
-        if(gameBoard.board[7] === player){
-            if(gameBoard.board[6] === player && gameBoard.board[8] === player) {
-                console.log('you won')
-            }
-            if(gameBoard.board[4] === player && gameBoard.board[1] === player) {
-                console.log('you won')
-            }
-        }
-        if(gameBoard.board[3] === player){
-            if(gameBoard.board[4] === player && gameBoard.board[5] === player) {
-                console.log('you won')
-            }
+    const findTheWinner = () => {
+        //'.some' searches for at least one combination that meets our criteria
+        //'.every' checks every single combinations number, and if every number
+        // inside of any combination contains the same sign it returns 'true',
+        // and it means that '.every' found the winning combination.
+        const winner = gameBoard.winningCombinations.some(combination => {
+            return combination.every(index => {
+                return gameBoard.board[index] === currentPlayer;
+            })
+        });
+
+        if(winner) {
+            console.log('Winner')
         }
     };
 
