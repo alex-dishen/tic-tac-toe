@@ -103,7 +103,7 @@ const gameController = (() => {
         square.addEventListener('click', (e) => {handleSquareClick(e)});
     });
 
-    return {playerOne, playerTwo}
+    return {playerOne, playerTwo, botPlayer}
 })();
 
 const displayController = (() => {
@@ -116,6 +116,10 @@ const displayController = (() => {
     const playMode = document.querySelector('.play-mode');
     const fightBtn = document.querySelector('.fight-button');
     const goBackBtns = document.querySelectorAll('.go-back');
+    const aiLevels = document.querySelector('.ai-levels');
+    const easyLevel = document.querySelector('.easy');
+    const midLevel = document.querySelector('.mid');
+    const hardLevel = document.querySelector('.hard');
 
     //      PLAYERS ATTRIBUTES
     const playerOneInput = document.querySelector('.player-1-input');
@@ -135,20 +139,38 @@ const displayController = (() => {
         opponentSign.setAttribute('src', `${gameController.playerTwo.sign}`);
     };
 
-    const showTwoPlayersPlayground = () => {
-        playMode.style.display = 'none';
-        playground.style.display = 'grid';
+    const showAIPrematch = () => {
+        menu.style.display = 'none';
+        playMode.style.display = 'flex';
+        aiLevels.style.display = 'flex'
+        opponentFace.setAttribute('src', `${gameController.botPlayer.face}`);
+        opponentSign.setAttribute('src', `${gameController.botPlayer.sign}`);
+    };
+
+    const animateElement = (e) => {
+        if(e.target.dataset.name === 'easy') {
+            easyLevel.classList.add('chosen-level');
+            midLevel.classList.remove('chosen-level');
+            hardLevel.classList.remove('chosen-level');
+        }
+        if(e.target.dataset.name === 'mid') {
+            midLevel.classList.add('chosen-level');
+            easyLevel.classList.remove('chosen-level');
+            hardLevel.classList.remove('chosen-level');
+        }
+        if(e.target.dataset.name === 'hard') {
+            hardLevel.classList.add('chosen-level');
+            midLevel.classList.remove('chosen-level');
+            easyLevel.classList.remove('chosen-level');
+        }
     };
 
     const goToMenu = () => {
-        // if statements are needed here so that playground doesn't get touched
-        //if it wasn't even opened
-        if(playground.style.display === 'grid') {
-            playground.style.display = 'none';
-        }
-        if(playMode.style.display === 'flex') {
-            playMode.style.display = 'none';
-        }
+        playground.style.display = 'none';
+        playMode.style.display = 'none';
+        playerOneInput.style.display = 'none';
+        playerTwoInput.style.display = 'none';
+        aiLevels.style.display = 'none';
         playerOneInput.value = '';
         playerTwoInput.value = '';
         menu.style.display = 'flex';
@@ -156,7 +178,19 @@ const displayController = (() => {
 
     twoPlayersMode.addEventListener('click', () => {
         showTwoPlayersPrematch();
-        fightBtn.addEventListener('click', showTwoPlayersPlayground);
+    });
+
+    aiMode.addEventListener('click', () => {
+        showAIPrematch();
+    });
+
+    easyLevel.onclick = e => animateElement(e);
+    midLevel.onclick = e => animateElement(e);
+    hardLevel.onclick = e => animateElement(e);
+
+    fightBtn.addEventListener('click', () => {
+        playMode.style.display = 'none';
+        playground.style.display = 'grid';
     });
 
     goBackBtns.forEach(goBackBtn => {
