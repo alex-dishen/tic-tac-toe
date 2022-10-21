@@ -65,7 +65,15 @@ const gameController = (() => {
         });
 
         if(winner) {
-            console.log('Winner')
+            console.log(`${currentPlayer}`)
+        }
+
+        const tie = gameBoard.board.every(index => {
+            return index !== '';
+        })
+
+        if(!winner && tie) {
+            console.log('tie')
         }
     };
 
