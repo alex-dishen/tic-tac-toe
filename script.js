@@ -1,5 +1,5 @@
-const Player = (boardSign, arraySign) => {
-    return { boardSign, arraySign };
+const Player = (sign, face) => {
+    return { sign, face };
 }
 
 const gameBoard = (() => {
@@ -30,11 +30,14 @@ const gameBoard = (() => {
 })();
 
 const gameController = (() => {
-    const playerOne = Player('img/cross.svg', 'X');
-    const playerTwo = Player('img/circle-blue.svg', 'O');
-    const botPlayer = Player('img/circle-red.svg', 'O');
+
+    // const createPlayer = (() => {
+    const playerOne = Player('img/cross.svg', 'img/player.svg');
+    // return {playerOne};
+    // })();
+    const playerTwo = Player('img/circle-blue.svg', 'img/player-blue.svg');
+    const botPlayer = Player('img/circle-red.svg', 'img/robot.svg');
     let currentPlayer;
-    let UIPlayer;
 
     const squares = document.querySelectorAll('.square');
 
@@ -43,18 +46,16 @@ const gameController = (() => {
         const squareIndex = e.target.id;
         
         if(typeof gameBoard.board[squareIndex] === 'number') {
-            // currentPlayer = currentPlayer === playerOne.arraySign ? 
-            //                  playerTwo.arraySign : playerOne.arraySign;
-            // UIPlayer = UIPlayer === playerOne.boardSign ? 
-            //                playerTwo.boardSign : playerOne.boardSign;
+            currentPlayer = 
+                currentPlayer === playerOne.sign ? playerTwo.sign : playerOne.sign;
             const img = document.createElement('img');
-            gameBoard.addSignToBoard(squareIndex, /*currentPlayer*/ playerOne.arraySign);
-            img.setAttribute('src', `${/*UIPlayer*/ playerOne.boardSign}`);
+            gameBoard.addSignToBoard(squareIndex, currentPlayer);
+            img.setAttribute('src', `${currentPlayer}`);
             e.target.appendChild(img);
-            randomBotMove();
+            // randomBotMove();
         }
 
-        indicateTheWinner();
+        console.log(indicateTheWinner())
     };
 
     const indicateTheWinner = () => {
@@ -69,7 +70,7 @@ const gameController = (() => {
         });
 
         const isTie = gameBoard.board.every(index => {
-            return index !== '';
+            return typeof index !== 'number';
         })
 
         if(isWinner) {
@@ -92,15 +93,73 @@ const gameController = (() => {
         const img = document.createElement('img');
         const randomIndex = Math.floor(Math.random() * emptySpots.length);
 
-        gameBoard.addSignToBoard(emptySpots[randomIndex], botPlayer.arraySign);
+        gameBoard.addSignToBoard(emptySpots[randomIndex], botPlayer.sign);
         const square = document.getElementById(`${emptySpots[randomIndex]}`);
-        img.setAttribute('src', `${botPlayer.boardSign}`);
+        img.setAttribute('src', `${botPlayer.sign}`);
         square.appendChild(img);
     };
 
     squares.forEach(square => {
         square.addEventListener('click', (e) => {handleSquareClick(e)});
     });
+
+    return {playerOne, playerTwo}
 })();
 
-const displayController = (() => {})();
+const displayController = (() => {
+    //          MENU
+    const menu = document.querySelector('.menu');
+    const twoPlayersMode = document.querySelector('.two-players-mode');
+    const aiMode = document.querySelector('.ai-mode');
+
+    //        PRE-MATCH
+    const playMode = document.querySelector('.play-mode');
+    const fightBtn = document.querySelector('.fight-button');
+    const goBackBtns = document.querySelectorAll('.go-back');
+
+    //      PLAYERS ATTRIBUTES
+    const playerOneInput = document.querySelector('.player-1-input');
+    const playerTwoInput = document.querySelector('.player-2-input');
+    const opponentFace = document.querySelector('.opponent-face');
+    const opponentSign = document.querySelector('.opponent-sign');
+
+    //         PLAYGROUND
+    const playground = document.querySelector('.playground');
+
+    const showTwoPlayersPrematch = () => {
+        menu.style.display = 'none';
+        playMode.style.display = 'flex';
+        playerOneInput.style.display = 'block';
+        playerTwoInput. style.display = 'block';
+        opponentFace.setAttribute('src', `${gameController.playerTwo.face}`);
+        opponentSign.setAttribute('src', `${gameController.playerTwo.sign}`);
+    };
+
+    const showTwoPlayersPlayground = () => {
+        playMode.style.display = 'none';
+        playground.style.display = 'grid';
+    };
+
+    const goToMenu = () => {
+        // if statements are needed here so that playground doesn't get touched
+        //if it wasn't even opened
+        if(playground.style.display === 'grid') {
+            playground.style.display = 'none';
+        }
+        if(playMode.style.display === 'flex') {
+            playMode.style.display = 'none';
+        }
+        playerOneInput.value = '';
+        playerTwoInput.value = '';
+        menu.style.display = 'flex';
+    };
+
+    twoPlayersMode.addEventListener('click', () => {
+        showTwoPlayersPrematch();
+        fightBtn.addEventListener('click', showTwoPlayersPlayground);
+    });
+
+    goBackBtns.forEach(goBackBtn => {
+        goBackBtn.addEventListener('click', goToMenu);
+    });
+})();

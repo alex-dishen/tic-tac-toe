@@ -78,13 +78,14 @@ main {
 /* menu */
 
 .menu {
-    display: none; /*flex*/
+    display: flex; /*flex*/
     flex-direction: column;
     margin: 0 auto;
     gap: 40px;
 }
 
-.mode {
+.ai-mode,
+.two-players-mode {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
@@ -99,11 +100,13 @@ main {
     box-shadow: 0px 4px 4px rgb(0 0 0 / 25%);
 }
 
-.mode:hover {
+.ai-mode:hover,
+.two-players-mode:hover {
     animation: moveUpDown 0.75s ease-in-out infinite;
 }
 
-.mode img {
+.ai-mode img,
+.two-players-mode img {
     height: 65px;
 }
 
@@ -111,7 +114,7 @@ main {
 
 .play-mode,
 .prematch-player, 
-.back-navigation {
+.go-back {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -234,7 +237,7 @@ input[placeholder$='2']::placeholder{
     grid-column: 1 / 4;
 }
 
-.back-navigation {
+.go-back {
     gap: 5px;
     color: var(--yellow);
     font-size: var(--font-28px);
@@ -242,14 +245,14 @@ input[placeholder$='2']::placeholder{
     cursor: pointer;
 }
 
-.back-navigation:hover {
+.go-back:hover {
     animation: moveForwardBackward 0.8s ease-in-out infinite;
 }
 
 /* playground */
 
 .playground {
-    display: grid; /*grid*/
+    display: none; /*grid*/
     grid-template:  repeat(2, auto) / repeat(3, auto);
     grid-template-areas: 'first-player board second-player'
                          '. controllers .';
