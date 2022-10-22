@@ -297,6 +297,7 @@ input[placeholder$='2']::placeholder{
 }
 
 #level {
+    display: none; /*block*/
     filter: brightness(100%);
     animation: none;
     cursor: default;
@@ -437,7 +438,7 @@ footer {
     }
 
     .small-player {
-        display: none;
+        display: flex;
     }
 }
 

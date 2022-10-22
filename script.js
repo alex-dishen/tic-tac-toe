@@ -1,5 +1,5 @@
-const Player = (sign, face) => {
-    return { sign, face };
+const Player = (sign, face, name) => {
+    return { sign, face, name };
 }
 
 const gameBoard = (() => {
@@ -29,33 +29,29 @@ const gameBoard = (() => {
     return { board, addSignToBoard, winningCombinations };
 })();
 
-const gameController = (() => {
+const displayController = (() => {
+//              ||||----------------------GAME LOGIC-------------------||||
 
-    // const createPlayer = (() => {
+    // img/cross.svg === X
+    // img/circle-blue.svg && img/circle-red.svg === O
     const playerOne = Player('img/cross.svg', 'img/player.svg');
-    // return {playerOne};
-    // })();
     const playerTwo = Player('img/circle-blue.svg', 'img/player-blue.svg');
     const botPlayer = Player('img/circle-red.svg', 'img/robot.svg');
     let currentPlayer;
-
-    const squares = document.querySelectorAll('.square');
 
     const handleSquareClick = (e) => {
         // e.target === square user clicked
         const squareIndex = e.target.id;
         
         if(typeof gameBoard.board[squareIndex] === 'number') {
-            currentPlayer = 
-                currentPlayer === playerOne.sign ? playerTwo.sign : playerOne.sign;
+            currentPlayer = currentPlayer === playerOne.sign ? 
+                                              playerTwo.sign : playerOne.sign;
             const img = document.createElement('img');
             gameBoard.addSignToBoard(squareIndex, currentPlayer);
             img.setAttribute('src', `${currentPlayer}`);
             e.target.appendChild(img);
             // randomBotMove();
         }
-
-        console.log(indicateTheWinner())
     };
 
     const indicateTheWinner = () => {
@@ -99,14 +95,8 @@ const gameController = (() => {
         square.appendChild(img);
     };
 
-    squares.forEach(square => {
-        square.addEventListener('click', (e) => {handleSquareClick(e)});
-    });
+    //              |||||---------------DISPLAY GAME--------------------|||||
 
-    return {playerOne, playerTwo, botPlayer}
-})();
-
-const displayController = (() => {
     //          MENU
     const menu = document.querySelector('.menu');
     const twoPlayersMode = document.querySelector('.two-players-mode');
@@ -124,48 +114,91 @@ const displayController = (() => {
     //      PLAYERS ATTRIBUTES
     const playerOneInput = document.querySelector('.player-1-input');
     const playerTwoInput = document.querySelector('.player-2-input');
-    const opponentFace = document.querySelector('.opponent-face');
-    const opponentSign = document.querySelector('.opponent-sign');
+    const opponentFaces = document.querySelectorAll('.opponent-face');
+    const opponentSigns = document.querySelectorAll('.opponent-sign');
+    const playerOneName = document.querySelector('.first-player-name');
+    const opponentName = document.querySelector('.opponent-name');
+    const opponentWins = document.querySelector('.opponent-wins');
+    const smallOpponentWins = document.querySelector('.small-opponent-wins');
 
     //         PLAYGROUND
     const playground = document.querySelector('.playground');
+    const playerOneInfo = document.querySelector('.player-info');
+    const opponentInfo = document.querySelector('.opponent-info'); 
+    const squares = document.querySelectorAll('.square');
 
     const showTwoPlayersPrematch = () => {
         menu.style.display = 'none';
         playMode.style.display = 'flex';
         playerOneInput.style.display = 'block';
         playerTwoInput. style.display = 'block';
-        opponentFace.setAttribute('src', `${gameController.playerTwo.face}`);
-        opponentSign.setAttribute('src', `${gameController.playerTwo.sign}`);
+        // Opponent face at pre match info and at playground
+        opponentFaces.forEach(face => {
+            face.setAttribute('src', `${playerTwo.face}`);
+        });
+        // Opponent sign at pre match info and at playground
+        opponentSigns.forEach(sign => {
+            sign.setAttribute('src', `${playerTwo.sign}`);
+        });
     };
 
     const showAIPrematch = () => {
         menu.style.display = 'none';
         playMode.style.display = 'flex';
         aiLevels.style.display = 'flex'
-        opponentFace.setAttribute('src', `${gameController.botPlayer.face}`);
-        opponentSign.setAttribute('src', `${gameController.botPlayer.sign}`);
+        midLevel.classList.add('chosen-level');
+        opponentFaces.forEach(face => {
+            face.setAttribute('src', `${botPlayer.face}`);
+        });
+        opponentSigns.forEach(sign => {
+            sign.setAttribute('src', `${botPlayer.sign}`);
+        });
     };
 
-    const animateElement = (e) => {
+    const addRemoveClass = (clas, elementToAdd, ...elementsToRemove) => {
+        elementToAdd.classList.add(clas);
+        elementsToRemove.forEach(element => {
+            element.classList.remove(clas);
+        });
+    };
+
+    const animateAILevels = (e) => {
         if(e.target.dataset.name === 'easy') {
-            easyLevel.classList.add('chosen-level');
-            midLevel.classList.remove('chosen-level');
-            hardLevel.classList.remove('chosen-level');
-        }
-        if(e.target.dataset.name === 'mid') {
-            midLevel.classList.add('chosen-level');
-            easyLevel.classList.remove('chosen-level');
-            hardLevel.classList.remove('chosen-level');
-        }
-        if(e.target.dataset.name === 'hard') {
-            hardLevel.classList.add('chosen-level');
-            midLevel.classList.remove('chosen-level');
-            easyLevel.classList.remove('chosen-level');
+            addRemoveClass('chosen-level', easyLevel, midLevel, hardLevel);
+        } else if(e.target.dataset.name === 'mid') {
+            addRemoveClass('chosen-level', midLevel, easyLevel, hardLevel);
+        } else if(e.target.dataset.name === 'hard') {
+            addRemoveClass('chosen-level', hardLevel, easyLevel, midLevel);
         }
     };
+
+    const setNames = (() => {
+        const twoPlayersNames = () => {
+            playerOneName.textContent = playerOneInput.value || 'Player 1';
+            opponentName.textContent = playerTwoInput.value || 'Player 2';
+        };
+
+        return { twoPlayersNames };
+    })();
+
+    const setColor = (color, ...elements) => {
+        elements.forEach(element => {
+            element.style.color = color;
+        });
+    };
+
+    const animatePlayer = () => {
+        if(currentPlayer === playerOne.sign) {
+            addRemoveClass('chosen-level', opponentInfo, playerOneInfo);
+        } else {
+            addRemoveClass('chosen-level',playerOneInfo, opponentInfo);
+        }
+    }
 
     const goToMenu = () => {
+        // If user switches from one mode or another or clicks back, all of
+        //those item need to be set to there initial form in order to not
+        //being displayed where they don't belong
         playground.style.display = 'none';
         playMode.style.display = 'none';
         playerOneInput.style.display = 'none';
@@ -174,26 +207,43 @@ const displayController = (() => {
         playerOneInput.value = '';
         playerTwoInput.value = '';
         menu.style.display = 'flex';
+        easyLevel.classList.remove('chosen-level');
+        midLevel.classList.remove('chosen-level');
+        hardLevel.classList.remove('chosen-level');
     };
+
+    //              BUTTON CLICKS
 
     twoPlayersMode.addEventListener('click', () => {
         showTwoPlayersPrematch();
+        fightBtn.addEventListener('click', () => {
+            setNames.twoPlayersNames();
+            setColor('var(--blue)', opponentName, opponentWins, smallOpponentWins);
+        });
     });
 
     aiMode.addEventListener('click', () => {
         showAIPrematch();
     });
 
-    easyLevel.onclick = e => animateElement(e);
-    midLevel.onclick = e => animateElement(e);
-    hardLevel.onclick = e => animateElement(e);
+    easyLevel.onclick = e => animateAILevels(e);
+    midLevel.onclick = e => animateAILevels(e);
+    hardLevel.onclick = e => animateAILevels(e);
 
     fightBtn.addEventListener('click', () => {
         playMode.style.display = 'none';
         playground.style.display = 'grid';
+        addRemoveClass('chosen-level', playerOneInfo);
     });
 
     goBackBtns.forEach(goBackBtn => {
         goBackBtn.addEventListener('click', goToMenu);
+    });
+
+    squares.forEach(square => {
+        square.addEventListener('click', (e) => {
+            handleSquareClick(e);
+            animatePlayer();
+        });
     });
 })();
