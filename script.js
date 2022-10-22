@@ -39,7 +39,7 @@ const displayController = (() => {
     const botPlayer = Player('img/circle-red.svg', 'img/robot.svg');
     let currentPlayer;
 
-    const handleSquareClick = (e) => {
+    const makeMove = (e) => {
         // e.target === square user clicked
         const squareIndex = e.target.id;
         
@@ -50,7 +50,6 @@ const displayController = (() => {
             gameBoard.addSignToBoard(squareIndex, currentPlayer);
             img.setAttribute('src', `${currentPlayer}`);
             e.target.appendChild(img);
-            // randomBotMove();
         }
     };
 
@@ -70,7 +69,7 @@ const displayController = (() => {
         })
 
         if(isWinner) {
-            return `${currentPlayer}`;
+            return currentPlayer;
         }
 
         if(!isWinner && isTie) {
@@ -125,7 +124,12 @@ const displayController = (() => {
     const playground = document.querySelector('.playground');
     const playerOneInfo = document.querySelector('.player-info');
     const opponentInfo = document.querySelector('.opponent-info'); 
+    const smallPlayerOne = document.querySelector('.first.small-player');
+    const smallOpponent = document.querySelector('.second.small-player');
     const squares = document.querySelectorAll('.square');
+    const overlay = document.querySelector('.overlay');
+    const winnerName = document.querySelector('.winner');
+    const winnerText = document.querySelector('.winner-text')
 
     const showTwoPlayersPrematch = () => {
         menu.style.display = 'none';
@@ -174,8 +178,10 @@ const displayController = (() => {
 
     const setNames = (() => {
         const twoPlayersNames = () => {
-            playerOneName.textContent = playerOneInput.value || 'Player 1';
-            opponentName.textContent = playerTwoInput.value || 'Player 2';
+            playerOne.name = playerOneInput.value || 'Player 1';
+            playerTwo.name = playerTwoInput.value || 'Player 2';
+            playerOneName.textContent = playerOne.name;
+            opponentName.textContent = playerTwo.name;
         };
 
         return { twoPlayersNames };
@@ -190,10 +196,27 @@ const displayController = (() => {
     const animatePlayer = () => {
         if(currentPlayer === playerOne.sign) {
             addRemoveClass('chosen-level', opponentInfo, playerOneInfo);
+            addRemoveClass('chosen-level', smallOpponent, smallPlayerOne);
         } else {
             addRemoveClass('chosen-level',playerOneInfo, opponentInfo);
+            addRemoveClass('chosen-level',smallPlayerOne, smallOpponent);
         }
-    }
+    };
+
+    const showRoundResults = () => {
+        if(indicateTheWinner() !== undefined) {
+            overlay.style.display = 'flex';
+            if(indicateTheWinner() === playerOne.sign) {
+                setColor('var(--purple)', winnerName);
+                winnerName.textContent = playerOne.name;
+            } else if(indicateTheWinner() === playerTwo.sign){
+                setColor('var(--blue)', winnerName);
+                winnerName.textContent = playerTwo.name;
+            } else {
+                winnerText.textContent = indicateTheWinner();
+            }
+        }
+    };
 
     const goToMenu = () => {
         // If user switches from one mode or another or clicks back, all of
@@ -234,6 +257,7 @@ const displayController = (() => {
         playMode.style.display = 'none';
         playground.style.display = 'grid';
         addRemoveClass('chosen-level', playerOneInfo);
+        addRemoveClass('chosen-level', smallPlayerOne);
     });
 
     goBackBtns.forEach(goBackBtn => {
@@ -242,8 +266,9 @@ const displayController = (() => {
 
     squares.forEach(square => {
         square.addEventListener('click', (e) => {
-            handleSquareClick(e);
+            makeMove(e);
             animatePlayer();
+            showRoundResults();
         });
     });
 })();
