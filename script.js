@@ -5,7 +5,7 @@ const Player = (sign, face, name) => {
 const gameBoard = (() => {
     // The array contains numbers instead of ['', ''] && [null, null] to way
     //easier find an index to put the sign under, when the bot makes his choice
-    const board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+    let board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
     //     BOARD
     //  [0] [1] [2]
@@ -26,7 +26,16 @@ const gameBoard = (() => {
         board[index] = sign;
     };
 
-    return { board, addSignToBoard, winningCombinations };
+    const cleanBoard = () => {
+        // Because board if located in another function, it can be reset to it's 
+        //initial form only with a loop or it can be moved to displayController()
+        //and the reset can be done with board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+        for(let i = 0; i <= 8; i++) {
+            board[i] = i;
+        }
+    };
+
+    return { board, winningCombinations, addSignToBoard, cleanBoard };
 })();
 
 const displayController = (() => {
@@ -37,7 +46,7 @@ const displayController = (() => {
     const playerOne = Player('img/cross.svg', 'img/player.svg');
     const playerTwo = Player('img/circle-blue.svg', 'img/player-blue.svg');
     const botPlayer = Player('img/circle-red.svg', 'img/robot.svg');
-    let currentPlayer;
+    let currentPlayer = '';
 
     const makeMove = (e) => {
         // e.target === square user clicked
@@ -45,7 +54,7 @@ const displayController = (() => {
         
         if(typeof gameBoard.board[squareIndex] === 'number') {
             currentPlayer = currentPlayer === playerOne.sign ? 
-                                              playerTwo.sign : playerOne.sign;
+                                playerTwo.sign : playerOne.sign;
             const img = document.createElement('img');
             gameBoard.addSignToBoard(squareIndex, currentPlayer);
             img.setAttribute('src', `${currentPlayer}`);
@@ -166,6 +175,12 @@ const displayController = (() => {
         });
     };
 
+    const removeClass = (clas, ...elementsToRemove) => {
+        elementsToRemove.forEach(element => {
+            element.classList.remove(clas);
+        });
+    };
+
     const animateAILevels = (e) => {
         if(e.target.dataset.name === 'easy') {
             addRemoveClass('chosen-level', easyLevel, midLevel, hardLevel);
@@ -218,21 +233,32 @@ const displayController = (() => {
         }
     };
 
-    const goToMenu = () => {
-        // If user switches from one mode or another or clicks back, all of
-        //those item need to be set to there initial form in order to not
-        //being displayed where they don't belong
+    const cleanBoard = () => {
+        gameBoard.cleanBoard();
+        squares.forEach(square => {
+            square.replaceChildren();
+        });
+        // playerTwo.sign is applied to get playerOne.sign in current player
+        currentPlayer = playerTwo.sign;
+    };
+
+    const hideElements = () => {
         playground.style.display = 'none';
         playMode.style.display = 'none';
         playerOneInput.style.display = 'none';
         playerTwoInput.style.display = 'none';
         aiLevels.style.display = 'none';
+        overlay.style.display = 'none';
+    };
+
+    const goToMenu = () => {
+        hideElements();
         playerOneInput.value = '';
         playerTwoInput.value = '';
         menu.style.display = 'flex';
-        easyLevel.classList.remove('chosen-level');
-        midLevel.classList.remove('chosen-level');
-        hardLevel.classList.remove('chosen-level');
+        removeClass('chosen-level', easyLevel, midLevel, hardLevel, 
+                    smallPlayerOne, smallOpponent);
+        cleanBoard();
     };
 
     //              BUTTON CLICKS
@@ -259,11 +285,7 @@ const displayController = (() => {
         addRemoveClass('chosen-level', playerOneInfo);
         addRemoveClass('chosen-level', smallPlayerOne);
     });
-
-    goBackBtns.forEach(goBackBtn => {
-        goBackBtn.addEventListener('click', goToMenu);
-    });
-
+    
     squares.forEach(square => {
         square.addEventListener('click', (e) => {
             makeMove(e);
@@ -271,4 +293,9 @@ const displayController = (() => {
             showRoundResults();
         });
     });
+
+    goBackBtns.forEach(goBackBtn => {
+        goBackBtn.addEventListener('click', goToMenu);
+    });
+
 })();

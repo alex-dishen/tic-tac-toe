@@ -113,8 +113,7 @@ main {
 /* play mode */
 
 .play-mode,
-.prematch-player, 
-.go-back {
+.prematch-player {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -235,18 +234,6 @@ input[placeholder$='2']::placeholder{
     color: var(--dark-blue);
     font-size: var(--font-38px);
     grid-column: 1 / 4;
-}
-
-.go-back {
-    gap: 5px;
-    color: var(--yellow);
-    font-size: var(--font-28px);
-    text-shadow: var(--bald-shadow);
-    cursor: pointer;
-}
-
-.go-back:hover {
-    animation: moveForwardBackward 0.8s ease-in-out infinite;
 }
 
 /* playground */
@@ -402,7 +389,11 @@ div .overlay {
 
 .controllers {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-around;
+    align-items: center;
+    color: var(--yellow);
+    font-size: var(--font-28px);
+    cursor: pointer;
     grid-area: controllers;
 }
 
