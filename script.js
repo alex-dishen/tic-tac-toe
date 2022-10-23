@@ -51,7 +51,7 @@ const displayController = (() => {
     let playerTwoScore = 0;
     let opponentTurn = true;
 
-    const makeMove = (e) => {
+    const makeTwoPlayersMoves = (e) => {
         // e.target === square user clicked
         const squareIndex = e.target.id;
         
@@ -80,6 +80,8 @@ const displayController = (() => {
             return typeof index !== 'number';
         })
 
+        console.log(currentPlayer)
+
         if(isWinner) {
             return currentPlayer;
         }
@@ -95,23 +97,38 @@ const displayController = (() => {
         });
     };
 
-    const randomBotMove = () => {
+    const getRandomMove = () => {
         const emptySpots = getEmptySpots();
-        const img = document.createElement('img');
         const randomIndex = Math.floor(Math.random() * emptySpots.length);
+        return emptySpots[randomIndex]
+    };
 
-        gameBoard.addSignToBoard(emptySpots[randomIndex], botPlayer.sign);
-        const square = document.getElementById(`${emptySpots[randomIndex]}`);
+    const randomBotMove = (e) => {
+        const squareIndex = e.target.id;
+
+        if(typeof gameBoard.board[squareIndex] === 'number') {
+            const img = document.createElement('img');
+            gameBoard.addSignToBoard(squareIndex, playerOne.sign);
+            img.setAttribute('src', `${playerOne.sign}`);
+            e.target.appendChild(img);
+        }
+
+        const randomIndex = getRandomMove();
+        const img = document.createElement('img');
+        gameBoard.addSignToBoard(randomIndex, botPlayer.sign);
+        const square = document.getElementById(`${randomIndex}`);
         img.setAttribute('src', `${botPlayer.sign}`);
         square.appendChild(img);
+
+        currentPlayer = currentPlayer === playerOne.sign ? 
+        botPlayer.sign : playerOne.sign;
     };
 
     //              |||||---------------DISPLAY GAME--------------------|||||
 
     //          MENU
     const menu = document.querySelector('.menu');
-    const twoPlayersMode = document.querySelector('.two-players-mode');
-    const aiMode = document.querySelector('.ai-mode');
+    const modes = document.querySelectorAll('.mode')
 
     //        PRE-MATCH
     const playMode = document.querySelector('.play-mode');
@@ -136,6 +153,7 @@ const displayController = (() => {
     const opponentInfo = document.querySelector('.opponent-info'); 
     const smallPlayerOneInfo = document.querySelector('.first.small-player');
     const smallOpponentInfo = document.querySelector('.second.small-player');
+    const aiLevel = document.getElementById('level');
     const playerOneWins = document.querySelector('.first-player-wins');
     const opponentWins = document.querySelector('.opponent-wins');
     const smallPlayerOneWins = document.querySelector('.small-first-player-wins');
@@ -148,23 +166,18 @@ const displayController = (() => {
     const resetScoreBtn = document.querySelector('.reset-score');
 
     const showTwoPlayersPrematch = () => {
-        menu.style.display = 'none';
-        playMode.style.display = 'flex';
         playerOneInput.style.display = 'block';
         playerTwoInput. style.display = 'block';
-        // Opponent face at pre match info and at playground
         opponentFaces.forEach(face => {
             face.setAttribute('src', `${playerTwo.face}`);
         });
-        // Opponent sign at pre match info and at playground
+
         opponentSigns.forEach(sign => {
             sign.setAttribute('src', `${playerTwo.sign}`);
         });
     };
 
     const showAIPrematch = () => {
-        menu.style.display = 'none';
-        playMode.style.display = 'flex';
         aiLevels.style.display = 'flex'
         midLevel.classList.add('chosen-level');
         opponentFaces.forEach(face => {
@@ -202,17 +215,42 @@ const displayController = (() => {
         const twoPlayersNames = () => {
             playerOne.name = playerOneInput.value || 'Player 1';
             playerTwo.name = playerTwoInput.value || 'Player 2';
+            aiLevel.style.display = 'none';
+            opponentName.style.display = 'block';
             playerOneName.textContent = playerOne.name;
             opponentName.textContent = playerTwo.name;
         };
 
-        return { twoPlayersNames };
+        const aiNames = () => {
+            playerOne.name = 'Human';
+            playerOneName.textContent = playerOne.name;
+            opponentName.style.display = 'none';
+            aiLevel.style.display = 'block';
+        };
+
+        return { twoPlayersNames, aiNames };
     })();
 
     const setColor = (color, ...elements) => {
         elements.forEach(element => {
             element.style.color = color;
         });
+    };
+
+    const setAILevel = () => {
+        // If user switches from one level to another without refreshing the page
+        //the previous class that was added has to be removed
+        aiLevel.removeAttribute('class');
+        if(easyLevel.classList.contains('chosen-level')) {
+            addRemoveClass('easy', aiLevel);
+            aiLevel.textContent = 'EASY';
+        } else if(midLevel.classList.contains('chosen-level')) {
+            addRemoveClass('mid', aiLevel);
+            aiLevel.textContent = 'MID';
+        } else if(hardLevel.classList.contains('chosen-level')) {
+            aiLevel.classList.add('hard');
+            aiLevel.textContent = 'HARD';
+        }
     };
 
     const animatePlayer = () => {
@@ -289,29 +327,43 @@ const displayController = (() => {
     };
 
     const goToMenu = () => {
-        hideElements();
+        menu.style.display = 'flex';
         playerOneInput.value = '';
         playerTwoInput.value = '';
-        menu.style.display = 'flex';
         removeClass('chosen-level', easyLevel, midLevel, hardLevel, 
-                    smallPlayerOneInfo, smallOpponentInfo);
+                                    smallPlayerOneInfo, smallOpponentInfo);
         // playerTwo.sign is applied to get playerOne.sign in current player
         currentPlayer = playerTwo.sign;
+        hideElements();
         cleanBoard();
+        resetScore();
     };
 
     //              BUTTON CLICKS
+    modes.forEach(mode => {
+        mode.addEventListener('click', () => {
+            
+            modeName = mode.getAttribute('data-mode');
+            menu.style.display = 'none';
+            playMode.style.display = 'flex';
 
-    twoPlayersMode.addEventListener('click', () => {
-        showTwoPlayersPrematch();
-        fightBtn.addEventListener('click', () => {
-            setNames.twoPlayersNames();
-            setColor('var(--blue)', opponentName, opponentWins, smallOpponentWins);
+            if(modeName === 'two-players-mode') {
+                showTwoPlayersPrematch();
+                fightBtn.addEventListener('click', () => {
+                    setNames.twoPlayersNames();
+                    setColor('var(--blue)', opponentName, opponentWins, smallOpponentWins);
+                });
+            }
+
+            if(modeName === 'ai') {
+                showAIPrematch();
+                fightBtn.addEventListener('click', () => {
+                    setNames.aiNames();
+                    setColor('var(--red)', opponentWins, smallOpponentWins);
+                    setAILevel();
+                });
+            }
         });
-    });
-
-    aiMode.addEventListener('click', () => {
-        showAIPrematch();
     });
 
     easyLevel.onclick = e => animateAILevels(e);
@@ -327,7 +379,12 @@ const displayController = (() => {
     
     squares.forEach(square => {
         square.addEventListener('click', (e) => {
-            makeMove(e);
+            if(modeName === 'two-players-mode') {
+                makeTwoPlayersMoves(e);
+            }
+            if(modeName === 'ai') {
+                randomBotMove(e);
+            }
             animatePlayer();
             // if winner is found or it's a tie
             if(indicateTheWinner() !== undefined) {
