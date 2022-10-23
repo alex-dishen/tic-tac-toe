@@ -397,8 +397,41 @@ div .overlay {
     grid-area: controllers;
 }
 
+.go-back, 
+.next-round, 
+.reset-score {
+    display: flex; /*flex*/
+    flex-direction: column;
+    text-align: center;
+    gap: 4px;
+    text-shadow: var(--bald-shadow);
+}
+
+.go-back {
+    gap: 4px;
+    color: var(--yellow);
+    font-size: var(--font-28px);
+}
+
 img[src*='arrow'] {
     width: 54px;
+}
+
+.next-round {
+    display: none;
+    font-size: 42px;
+    line-height: 0.9;
+}
+
+.reset-score {
+    display: none;
+    line-height: 1;
+}
+
+.go-back:hover, 
+.next-round:hover, 
+.reset-score:hover {
+    animation: moveForwardBackward 0.8s ease-in-out infinite;
 }
 
 /* FOOTER */
@@ -464,5 +497,9 @@ footer {
 
     .controllers div {
         font-size: 4.7vw;
+    }
+
+    .controllers .next-round {
+        font-size: 7.1vw;
     }
 }

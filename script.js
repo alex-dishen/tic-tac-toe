@@ -26,7 +26,7 @@ const gameBoard = (() => {
         board[index] = sign;
     };
 
-    const cleanBoard = () => {
+    const resetBoard = () => {
         // Because board if located in another function, it can be reset to it's 
         //initial form only with a loop or it can be moved to displayController()
         //and the reset can be done with board = [0, 1, 2, 3, 4, 5, 6, 7, 8];
@@ -35,7 +35,7 @@ const gameBoard = (() => {
         }
     };
 
-    return { board, winningCombinations, addSignToBoard, cleanBoard };
+    return { board, winningCombinations, addSignToBoard, resetBoard };
 })();
 
 const displayController = (() => {
@@ -47,6 +47,8 @@ const displayController = (() => {
     const playerTwo = Player('img/circle-blue.svg', 'img/player-blue.svg');
     const botPlayer = Player('img/circle-red.svg', 'img/robot.svg');
     let currentPlayer = '';
+    let playerOneScore = 0;
+    let playerTwoScore = 0;
 
     const makeMove = (e) => {
         // e.target === square user clicked
@@ -126,19 +128,23 @@ const displayController = (() => {
     const opponentSigns = document.querySelectorAll('.opponent-sign');
     const playerOneName = document.querySelector('.first-player-name');
     const opponentName = document.querySelector('.opponent-name');
-    const opponentWins = document.querySelector('.opponent-wins');
-    const smallOpponentWins = document.querySelector('.small-opponent-wins');
 
     //         PLAYGROUND
     const playground = document.querySelector('.playground');
     const playerOneInfo = document.querySelector('.player-info');
     const opponentInfo = document.querySelector('.opponent-info'); 
-    const smallPlayerOne = document.querySelector('.first.small-player');
-    const smallOpponent = document.querySelector('.second.small-player');
+    const smallPlayerOneInfo = document.querySelector('.first.small-player');
+    const smallOpponentInfo = document.querySelector('.second.small-player');
+    const playerOneWins = document.querySelector('.first-player-wins');
+    const opponentWins = document.querySelector('.opponent-wins');
+    const smallPlayerOneWins = document.querySelector('.small-first-player-wins');
+    const smallOpponentWins = document.querySelector('.small-opponent-wins');
     const squares = document.querySelectorAll('.square');
     const overlay = document.querySelector('.overlay');
     const winnerName = document.querySelector('.winner');
-    const winnerText = document.querySelector('.winner-text')
+    const winnerText = document.querySelector('.winner-text');
+    const nextRoundBtn = document.querySelector('.next-round');
+    const resetScoreBtn = document.querySelector('.reset-score');
 
     const showTwoPlayersPrematch = () => {
         menu.style.display = 'none';
@@ -211,35 +217,54 @@ const displayController = (() => {
     const animatePlayer = () => {
         if(currentPlayer === playerOne.sign) {
             addRemoveClass('chosen-level', opponentInfo, playerOneInfo);
-            addRemoveClass('chosen-level', smallOpponent, smallPlayerOne);
+            addRemoveClass('chosen-level', smallOpponentInfo, smallPlayerOneInfo);
         } else {
             addRemoveClass('chosen-level',playerOneInfo, opponentInfo);
-            addRemoveClass('chosen-level',smallPlayerOne, smallOpponent);
+            addRemoveClass('chosen-level',smallPlayerOneInfo, smallOpponentInfo);
         }
     };
 
     const showRoundResults = () => {
-        if(indicateTheWinner() !== undefined) {
             overlay.style.display = 'flex';
             if(indicateTheWinner() === playerOne.sign) {
                 setColor('var(--purple)', winnerName);
                 winnerName.textContent = playerOne.name;
+                winnerText.textContent = 'Wins!';
+                playerOneScore += 1;
             } else if(indicateTheWinner() === playerTwo.sign){
                 setColor('var(--blue)', winnerName);
                 winnerName.textContent = playerTwo.name;
+                winnerText.textContent = 'Wins!';
+                playerTwoScore += 1;
             } else {
+                winnerName.textContent = '';
                 winnerText.textContent = indicateTheWinner();
             }
-        }
+            playerOneWins.textContent = `Wins: ${playerOneScore}`;
+            smallPlayerOneWins.textContent = playerOneScore;
+            opponentWins.textContent = `Wins: ${playerTwoScore}`;
+            smallOpponentWins.textContent = playerTwoScore;
+    };
+
+    const resetScore = () => {
+        playerOneScore = 0;
+        playerTwoScore = 0;
+        playerOneWins.textContent = `Wins: ${playerOneScore}`;
+        smallPlayerOneWins.textContent = playerOneScore;
+        opponentWins.textContent = `Wins: ${playerTwoScore}`;
+        smallOpponentWins.textContent = playerTwoScore;
     };
 
     const cleanBoard = () => {
-        gameBoard.cleanBoard();
+        gameBoard.resetBoard();
         squares.forEach(square => {
             square.replaceChildren();
         });
         // playerTwo.sign is applied to get playerOne.sign in current player
         currentPlayer = playerTwo.sign;
+        overlay.style.display = 'none';
+        nextRoundBtn.style.display = 'none';
+        resetScoreBtn.style.display = 'none';
     };
 
     const hideElements = () => {
@@ -248,7 +273,6 @@ const displayController = (() => {
         playerOneInput.style.display = 'none';
         playerTwoInput.style.display = 'none';
         aiLevels.style.display = 'none';
-        overlay.style.display = 'none';
     };
 
     const goToMenu = () => {
@@ -257,7 +281,7 @@ const displayController = (() => {
         playerTwoInput.value = '';
         menu.style.display = 'flex';
         removeClass('chosen-level', easyLevel, midLevel, hardLevel, 
-                    smallPlayerOne, smallOpponent);
+                    smallPlayerOneInfo, smallOpponentInfo);
         cleanBoard();
     };
 
@@ -283,16 +307,31 @@ const displayController = (() => {
         playMode.style.display = 'none';
         playground.style.display = 'grid';
         addRemoveClass('chosen-level', playerOneInfo);
-        addRemoveClass('chosen-level', smallPlayerOne);
+        addRemoveClass('chosen-level', smallPlayerOneInfo);
     });
     
     squares.forEach(square => {
         square.addEventListener('click', (e) => {
             makeMove(e);
             animatePlayer();
-            showRoundResults();
+            // if winner is found or it's a tie
+            if(indicateTheWinner() !== undefined) {
+                showRoundResults();
+                nextRoundBtn.style.display = 'flex';
+                resetScoreBtn.style.display = 'flex';
+                removeClass('chosen-level', smallPlayerOneInfo, smallOpponentInfo,
+                             playerOneInfo, opponentInfo);
+            }
         });
     });
+
+    nextRoundBtn.addEventListener('click', () => {
+        cleanBoard();
+        addRemoveClass('chosen-level', playerOneInfo);
+        addRemoveClass('chosen-level', smallPlayerOneInfo);
+    });
+
+    resetScoreBtn.onclick = () => resetScore();
 
     goBackBtns.forEach(goBackBtn => {
         goBackBtn.addEventListener('click', goToMenu);
