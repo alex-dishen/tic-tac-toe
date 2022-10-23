@@ -49,6 +49,7 @@ const displayController = (() => {
     let currentPlayer = '';
     let playerOneScore = 0;
     let playerTwoScore = 0;
+    let opponentTurn = true;
 
     const makeMove = (e) => {
         // e.target === square user clicked
@@ -246,6 +247,20 @@ const displayController = (() => {
             smallOpponentWins.textContent = playerTwoScore;
     };
 
+    const changeCurrentPlayer = () => {
+        if(opponentTurn) {
+            currentPlayer = playerOne.sign;
+            opponentTurn = false;
+            addRemoveClass('chosen-level', opponentInfo);
+            addRemoveClass('chosen-level', smallOpponentInfo);
+        } else if(!opponentTurn) {
+            currentPlayer = playerTwo.sign;
+            opponentTurn = true;
+            addRemoveClass('chosen-level', playerOneInfo);
+            addRemoveClass('chosen-level', smallPlayerOneInfo);
+        }
+    };
+
     const resetScore = () => {
         playerOneScore = 0;
         playerTwoScore = 0;
@@ -260,8 +275,6 @@ const displayController = (() => {
         squares.forEach(square => {
             square.replaceChildren();
         });
-        // playerTwo.sign is applied to get playerOne.sign in current player
-        currentPlayer = playerTwo.sign;
         overlay.style.display = 'none';
         nextRoundBtn.style.display = 'none';
         resetScoreBtn.style.display = 'none';
@@ -282,6 +295,8 @@ const displayController = (() => {
         menu.style.display = 'flex';
         removeClass('chosen-level', easyLevel, midLevel, hardLevel, 
                     smallPlayerOneInfo, smallOpponentInfo);
+        // playerTwo.sign is applied to get playerOne.sign in current player
+        currentPlayer = playerTwo.sign;
         cleanBoard();
     };
 
@@ -327,8 +342,7 @@ const displayController = (() => {
 
     nextRoundBtn.addEventListener('click', () => {
         cleanBoard();
-        addRemoveClass('chosen-level', playerOneInfo);
-        addRemoveClass('chosen-level', smallPlayerOneInfo);
+        changeCurrentPlayer();
     });
 
     resetScoreBtn.onclick = () => resetScore();
