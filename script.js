@@ -46,23 +46,41 @@ const displayController = (() => {
     const playerOne = Player('img/cross.svg', 'img/player.svg');
     const playerTwo = Player('img/circle-blue.svg', 'img/player-blue.svg');
     const botPlayer = Player('img/circle-red.svg', 'img/robot.svg');
-    let currentPlayer = '';
+    let currentPlayer;
     let playerOneScore = 0;
     let playerTwoScore = 0;
-    let opponentTurn = true;
+    let opponentTurn = false;
 
-    const makeTwoPlayersMoves = (e) => {
-        // e.target === square user clicked
-        const squareIndex = e.target.id;
-        
-        if(typeof gameBoard.board[squareIndex] === 'number') {
+    const getCurrentPlayer = () => {
+        if(modeName === 'two-players-mode'){
             currentPlayer = currentPlayer === playerOne.sign ? 
-                                playerTwo.sign : playerOne.sign;
-            const img = document.createElement('img');
-            gameBoard.addSignToBoard(squareIndex, currentPlayer);
-            img.setAttribute('src', `${currentPlayer}`);
-            e.target.appendChild(img);
+                            playerTwo.sign : playerOne.sign;
+        } else if(modeName === 'ai') {
+            currentPlayer = currentPlayer === playerOne.sign ? 
+                            botPlayer.sign : playerOne.sign;
         }
+    };
+
+    const makeMove = (index) => {
+        const img = document.createElement('img');
+        getCurrentPlayer();
+        img.setAttribute('src', `${currentPlayer}`);
+        const square = document.getElementById(`${index}`);
+        gameBoard.addSignToBoard(index, currentPlayer);
+        square.appendChild(img);
+        if(indicateTheWinner()) {
+            showRoundResults();
+            nextRoundBtn.style.display = 'flex';
+            resetScoreBtn.style.display = 'flex';
+            removeClass('chosen-level', playerOneInfo, opponentInfo, smallPlayerOneInfo, smallPlayerOneInfo);
+        } else {
+            opponentTurn = !opponentTurn
+            if(isRobotMove()) makeRobotMove();
+        }
+    };
+
+    const isRobotMove = () => {
+        return opponentTurn && modeName === 'ai';
     };
 
     const indicateTheWinner = () => {
@@ -80,8 +98,6 @@ const displayController = (() => {
             return typeof index !== 'number';
         })
 
-        console.log(currentPlayer)
-
         if(isWinner) {
             return currentPlayer;
         }
@@ -97,31 +113,15 @@ const displayController = (() => {
         });
     };
 
+    const makeRobotMove = () => {
+        const robotMove = getRandomMove();
+        setTimeout(() => {makeMove(robotMove);}, 1200);
+    };
+
     const getRandomMove = () => {
         const emptySpots = getEmptySpots();
         const randomIndex = Math.floor(Math.random() * emptySpots.length);
         return emptySpots[randomIndex]
-    };
-
-    const randomBotMove = (e) => {
-        const squareIndex = e.target.id;
-
-        if(typeof gameBoard.board[squareIndex] === 'number') {
-            const img = document.createElement('img');
-            gameBoard.addSignToBoard(squareIndex, playerOne.sign);
-            img.setAttribute('src', `${playerOne.sign}`);
-            e.target.appendChild(img);
-        }
-
-        const randomIndex = getRandomMove();
-        const img = document.createElement('img');
-        gameBoard.addSignToBoard(randomIndex, botPlayer.sign);
-        const square = document.getElementById(`${randomIndex}`);
-        img.setAttribute('src', `${botPlayer.sign}`);
-        square.appendChild(img);
-
-        currentPlayer = currentPlayer === playerOne.sign ? 
-        botPlayer.sign : playerOne.sign;
     };
 
     //              |||||---------------DISPLAY GAME--------------------|||||
@@ -275,7 +275,12 @@ const displayController = (() => {
                 winnerName.textContent = playerTwo.name;
                 winnerText.textContent = 'Wins!';
                 playerTwoScore += 1;
-            } else {
+            } else if(indicateTheWinner() === botPlayer.sign) {
+                setColor('var(--red)', winnerName);
+                winnerName.textContent = 'Robot';
+                winnerText.textContent = 'Wins!';
+                playerTwoScore += 1;
+            } else if (indicateTheWinner() === 'It\'s a tie'){
                 winnerName.textContent = '';
                 winnerText.textContent = indicateTheWinner();
             }
@@ -342,7 +347,7 @@ const displayController = (() => {
     //              BUTTON CLICKS
     modes.forEach(mode => {
         mode.addEventListener('click', () => {
-            
+
             modeName = mode.getAttribute('data-mode');
             menu.style.display = 'none';
             playMode.style.display = 'flex';
@@ -379,20 +384,13 @@ const displayController = (() => {
     
     squares.forEach(square => {
         square.addEventListener('click', (e) => {
-            if(modeName === 'two-players-mode') {
-                makeTwoPlayersMoves(e);
+            const squareIndex = e.target.id;
+            if(typeof gameBoard.board[squareIndex] === 'number') {
+                makeMove(squareIndex);
             }
-            if(modeName === 'ai') {
-                randomBotMove(e);
-            }
-            animatePlayer();
-            // if winner is found or it's a tie
-            if(indicateTheWinner() !== undefined) {
-                showRoundResults();
-                nextRoundBtn.style.display = 'flex';
-                resetScoreBtn.style.display = 'flex';
-                removeClass('chosen-level', smallPlayerOneInfo, smallOpponentInfo,
-                             playerOneInfo, opponentInfo);
+            console.log(indicateTheWinner())
+            if(indicateTheWinner() === undefined) {
+                animatePlayer();
             }
         });
     });
