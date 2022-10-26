@@ -46,10 +46,12 @@ const displayController = (() => {
     const playerOne = Player('img/cross.svg', 'img/player.svg');
     const playerTwo = Player('img/circle-blue.svg', 'img/player-blue.svg');
     const botPlayer = Player('img/circle-red.svg', 'img/robot.svg');
+    let modeName;
     let currentPlayer;
     let playerOneScore = 0;
     let playerTwoScore = 0;
     let opponentTurn = false;
+    let opponentStarts = false;
 
     const getCurrentPlayer = () => {
         if(modeName === 'two-players-mode'){
@@ -62,25 +64,19 @@ const displayController = (() => {
     };
 
     const makeMove = (index) => {
-        const img = document.createElement('img');
         getCurrentPlayer();
+        const img = document.createElement('img');
         img.setAttribute('src', `${currentPlayer}`);
         const square = document.getElementById(`${index}`);
         gameBoard.addSignToBoard(index, currentPlayer);
         square.appendChild(img);
         if(indicateTheWinner()) {
             showRoundResults();
-            nextRoundBtn.style.display = 'flex';
-            resetScoreBtn.style.display = 'flex';
-            removeClass('chosen-level', playerOneInfo, opponentInfo, smallPlayerOneInfo, smallPlayerOneInfo);
         } else {
+            animatePlayer();
             opponentTurn = !opponentTurn
             if(isRobotMove()) makeRobotMove();
         }
-    };
-
-    const isRobotMove = () => {
-        return opponentTurn && modeName === 'ai';
     };
 
     const indicateTheWinner = () => {
@@ -113,15 +109,19 @@ const displayController = (() => {
         });
     };
 
-    const makeRobotMove = () => {
-        const robotMove = getRandomMove();
-        setTimeout(() => {makeMove(robotMove);}, 1200);
+    const isRobotMove = () => {
+        return opponentTurn && modeName === 'ai';
     };
 
     const getRandomMove = () => {
         const emptySpots = getEmptySpots();
         const randomIndex = Math.floor(Math.random() * emptySpots.length);
         return emptySpots[randomIndex]
+    };
+
+    const makeRobotMove = () => {
+        const robotMove = getRandomMove();
+        setTimeout(() => {makeMove(robotMove);}, 0);
     };
 
     //              |||||---------------DISPLAY GAME--------------------|||||
@@ -264,43 +264,53 @@ const displayController = (() => {
     };
 
     const showRoundResults = () => {
-            overlay.style.display = 'flex';
-            if(indicateTheWinner() === playerOne.sign) {
-                setColor('var(--purple)', winnerName);
-                winnerName.textContent = playerOne.name;
-                winnerText.textContent = 'Wins!';
-                playerOneScore += 1;
-            } else if(indicateTheWinner() === playerTwo.sign){
-                setColor('var(--blue)', winnerName);
-                winnerName.textContent = playerTwo.name;
-                winnerText.textContent = 'Wins!';
-                playerTwoScore += 1;
-            } else if(indicateTheWinner() === botPlayer.sign) {
-                setColor('var(--red)', winnerName);
-                winnerName.textContent = 'Robot';
-                winnerText.textContent = 'Wins!';
-                playerTwoScore += 1;
-            } else if (indicateTheWinner() === 'It\'s a tie'){
-                winnerName.textContent = '';
-                winnerText.textContent = indicateTheWinner();
-            }
-            playerOneWins.textContent = `Wins: ${playerOneScore}`;
-            smallPlayerOneWins.textContent = playerOneScore;
-            opponentWins.textContent = `Wins: ${playerTwoScore}`;
-            smallOpponentWins.textContent = playerTwoScore;
+        removeClass('chosen-level', playerOneInfo, opponentInfo, smallPlayerOneInfo, smallOpponentInfo);
+        overlay.style.display = 'flex';
+        nextRoundBtn.style.display = 'flex';
+        resetScoreBtn.style.display = 'flex';
+        if(indicateTheWinner() === playerOne.sign) {
+            setColor('var(--purple)', winnerName);
+            winnerName.textContent = playerOne.name;
+            winnerText.textContent = 'Wins!';
+            playerOneScore += 1;
+        } else if(indicateTheWinner() === playerTwo.sign){
+            setColor('var(--blue)', winnerName);
+            winnerName.textContent = playerTwo.name;
+            winnerText.textContent = 'Wins!';
+            playerTwoScore += 1;
+        } else if(indicateTheWinner() === botPlayer.sign) {
+            setColor('var(--red)', winnerName);
+            winnerName.textContent = 'Robot';
+            winnerText.textContent = 'Wins!';
+            playerTwoScore += 1;
+        } else if (indicateTheWinner() === 'It\'s a tie'){
+            winnerName.textContent = '';
+            winnerText.textContent = indicateTheWinner();
+        }
+        playerOneWins.textContent = `Wins: ${playerOneScore}`;
+        smallPlayerOneWins.textContent = playerOneScore;
+        opponentWins.textContent = `Wins: ${playerTwoScore}`;
+        smallOpponentWins.textContent = playerTwoScore;
     };
 
-    const changeCurrentPlayer = () => {
-        if(opponentTurn) {
-            currentPlayer = playerOne.sign;
-            opponentTurn = false;
-            addRemoveClass('chosen-level', opponentInfo);
-            addRemoveClass('chosen-level', smallOpponentInfo);
-        } else if(!opponentTurn) {
-            currentPlayer = playerTwo.sign;
-            opponentTurn = true;
-            addRemoveClass('chosen-level', playerOneInfo);
-            addRemoveClass('chosen-level', smallPlayerOneInfo);
+    const changePlayerTurn = () => {
+        if(modeName === 'ai') {
+            opponentStarts = !opponentStarts;
+            opponentTurn = opponentStarts;
+            if(isRobotMove()) {
+                currentPlayer = playerOne.sign;
+                makeRobotMove();
+            } else if(!isRobotMove()){
+                currentPlayer = botPlayer.sign;
+            }
+        } else {
+            if(opponentTurn) {
+                currentPlayer = playerOne.sign;
+                opponentTurn = false;
+            } else if(!opponentTurn) {
+                currentPlayer = playerTwo.sign;
+                opponentTurn = true;
+            }
         }
     };
 
@@ -338,7 +348,9 @@ const displayController = (() => {
         removeClass('chosen-level', easyLevel, midLevel, hardLevel, 
                                     smallPlayerOneInfo, smallOpponentInfo);
         // playerTwo.sign is applied to get playerOne.sign in current player
-        currentPlayer = playerTwo.sign;
+        currentPlayer = '';
+        opponentStarts = false;
+        opponentStarts = false;
         hideElements();
         cleanBoard();
         resetScore();
@@ -355,14 +367,17 @@ const displayController = (() => {
             if(modeName === 'two-players-mode') {
                 showTwoPlayersPrematch();
                 fightBtn.addEventListener('click', () => {
+                    //to start the right counting of player's turn
+                    opponentTurn = true;
                     setNames.twoPlayersNames();
                     setColor('var(--blue)', opponentName, opponentWins, smallOpponentWins);
                 });
-            }
-
-            if(modeName === 'ai') {
+            } else if(modeName === 'ai') {
                 showAIPrematch();
                 fightBtn.addEventListener('click', () => {
+                    //to start the right counting of player's turn after two-players-mode
+                    //was chosen
+                    opponentTurn = false;
                     setNames.aiNames();
                     setColor('var(--red)', opponentWins, smallOpponentWins);
                     setAILevel();
@@ -385,19 +400,18 @@ const displayController = (() => {
     squares.forEach(square => {
         square.addEventListener('click', (e) => {
             const squareIndex = e.target.id;
-            if(typeof gameBoard.board[squareIndex] === 'number') {
+            // If !isRobotMove() is omitted at this stage then while the bot is 'thinking'
+            //about his move a player can freely place the mark instead of a bot
+            if(typeof gameBoard.board[squareIndex] === 'number' && !isRobotMove()) {
                 makeMove(squareIndex);
-            }
-            console.log(indicateTheWinner())
-            if(indicateTheWinner() === undefined) {
-                animatePlayer();
             }
         });
     });
 
     nextRoundBtn.addEventListener('click', () => {
         cleanBoard();
-        changeCurrentPlayer();
+        changePlayerTurn();
+        animatePlayer();
     });
 
     resetScoreBtn.onclick = () => resetScore();
@@ -405,5 +419,4 @@ const displayController = (() => {
     goBackBtns.forEach(goBackBtn => {
         goBackBtn.addEventListener('click', goToMenu);
     });
-
 })();
