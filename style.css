@@ -23,6 +23,8 @@
     --font-28px: 1.75rem;
     --font-34px: 2.125rem;
     --font-38px: 2.375rem;
+    --font-42px: 2.625rem;
+    --font-65px: 4.063rem;
     --purple: rgb(194, 171, 247);
     --blue: rgb(128, 198, 250);
     --green: rgb(135, 252, 79);
@@ -349,7 +351,7 @@ div .overlay {
 
 .overlay div {
     background-color: inherit;
-    font-size: 65px;
+    font-size: var(--font-65px);
     text-shadow: var(--bald-shadow);
     box-shadow: none;
 }
@@ -406,6 +408,7 @@ div .overlay {
     text-align: center;
     gap: 4px;
     text-shadow: var(--bald-shadow);
+    cursor: pointer;
 }
 
 .go-back {
@@ -420,7 +423,7 @@ img[src*='arrow'] {
 
 .next-round {
     display: none;
-    font-size: 42px;
+    font-size: var(--font-42px);
     line-height: 0.9;
 }
 

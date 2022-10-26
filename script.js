@@ -63,6 +63,27 @@ const displayController = (() => {
         }
     };
 
+    const getEmptySpots = () => {
+        return gameBoard.board.filter(index => {
+            return typeof index === 'number'
+        });
+    };
+
+    const isRobotMove = () => {
+        return opponentTurn && modeName === 'ai';
+    };
+
+    const getRandomMove = () => {
+        const emptySpots = getEmptySpots();
+        const randomIndex = Math.floor(Math.random() * emptySpots.length);
+        return emptySpots[randomIndex]
+    };
+
+    const makeRobotMove = () => {
+        const robotMove = getRandomMove();
+        setTimeout(() => {makeMove(robotMove);}, 1200);
+    };
+
     const makeMove = (index) => {
         getCurrentPlayer();
         const img = document.createElement('img');
@@ -101,27 +122,6 @@ const displayController = (() => {
         if(!isWinner && isTie) {
             return 'It\'s a tie'
         }
-    };
-
-    const getEmptySpots = () => {
-        return gameBoard.board.filter(index => {
-            return typeof index === 'number'
-        });
-    };
-
-    const isRobotMove = () => {
-        return opponentTurn && modeName === 'ai';
-    };
-
-    const getRandomMove = () => {
-        const emptySpots = getEmptySpots();
-        const randomIndex = Math.floor(Math.random() * emptySpots.length);
-        return emptySpots[randomIndex]
-    };
-
-    const makeRobotMove = () => {
-        const robotMove = getRandomMove();
-        setTimeout(() => {makeMove(robotMove);}, 0);
     };
 
     //              |||||---------------DISPLAY GAME--------------------|||||
