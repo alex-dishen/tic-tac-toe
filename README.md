@@ -1,10 +1,29 @@
 # Tic Tac Toe
+The **Library** project is created according to the assignment from **The Odin Project** [course](https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript).
+<br>
+<br>
 
-Tic Tac Toe is created with HTML, CSS.
+![Preview](img/tic-tac-toe.png)
 
-<!-- ![Preview](img/) -->
+### 🔗 **Live preview** of the project is [here](https://alex-dishen.github.io/tic-tac-toe/).
 
-## Links
-- [Live App](https://alex-dishen.github.io/tic-tac-toe/) :point_left:
-- Link to the [Assignment](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe)
-<!-- - See my next [Project](https://github.com/alex-dishen/library) -->
+## **Features**
+* Two players mode
+* AI mode
+* Ability to change level of difficulty of the AI
+## In progress:
+* Middle level of difficulty
+* Hard level of difficulty
+
+## **Outcome**
+* Used **HTML**
+* Used **CSS**
+* Used **JavaScript**
+* Learned how to tackle all items inside functions to free global scope
+* Improved usage of factory functions
+* Improved usage of module pattern
+* Usage of minimax algorithm
+
+## **Navigation**
+* See my next project [CV Creator](https://github.com/alex-dishen/cv-application)
+* See my previous project [Library](https://github.com/alex-dishen/library)
