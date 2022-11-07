@@ -25,5 +25,5 @@ The **Library** project is created according to the assignment from **The Odin P
 * Usage of minimax algorithm
 
 ## **Navigation**
-* See my next project [CV Creator](https://github.com/alex-dishen/cv-application)
+* See my next project [CV Maker](https://github.com/alex-dishen/cv-maker)
 * See my previous project [Library](https://github.com/alex-dishen/library)
