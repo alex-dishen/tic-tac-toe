@@ -9,11 +9,7 @@ The **Library** project is created according to the assignment from **The Odin P
 
 ## **Features**
 * Two players mode
-* AI mode
-* Ability to change level of difficulty of the AI
-## In progress:
-* Middle level of difficulty
-* Hard level of difficulty
+* AI mode with two levels of difficulty
 
 ## **Outcome**
 * Used **HTML**

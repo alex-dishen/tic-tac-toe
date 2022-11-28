@@ -46,6 +46,7 @@ const displayController = (() => {
     const playerOne = Player('img/cross.svg', 'img/player.svg');
     const playerTwo = Player('img/circle-blue.svg', 'img/player-blue.svg');
     const botPlayer = Player('img/circle-red.svg', 'img/robot.svg');
+    let AIDifficulty;
     let modeName;
     let currentPlayer;
     let playerOneScore = 0;
@@ -63,8 +64,8 @@ const displayController = (() => {
         }
     };
 
-    const getEmptySpots = () => {
-        return gameBoard.board.filter(index => {
+    const getEmptySpots = (board) => {
+        return board.filter(index => {
             return typeof index === 'number'
         });
     };
@@ -74,14 +75,89 @@ const displayController = (() => {
     };
 
     const getRandomMove = () => {
-        const emptySpots = getEmptySpots();
+        const emptySpots = getEmptySpots(gameBoard.board);
         const randomIndex = Math.floor(Math.random() * emptySpots.length);
         return emptySpots[randomIndex]
     };
 
+    const getBestMove = () => {
+        const emptySquares = getEmptySpots(gameBoard.board);
+        let bestMoveIndex;
+        let bestMoveScore = -Infinity;
+        let moveScore;
+    
+        emptySquares.forEach((index) => {
+          gameBoard.board[index] = 'img/circle-red.svg';
+          moveScore = minimaxScore(gameBoard.board, 0, -Infinity, Infinity, false);
+          gameBoard.board[index] = index; // Undo move in board after minimax
+          if (moveScore > bestMoveScore) {
+            bestMoveScore = moveScore;
+            bestMoveIndex = index;
+          }
+        });
+        return bestMoveIndex;
+      };
+    
+      const minimaxScore = (boardState, depth, alpha, beta, isMaximizing) => {
+        // Static evalution if game would be over in this state
+        const roundResult = indicateTheWinner(boardState);
+        if (roundResult !== undefined) return staticEvaluation(roundResult, depth);
+    
+        // If it's not an ending state, continue minimax recursion
+        const emptySquares = getEmptySpots(boardState);
+        let moveScore;
+        if (isMaximizing) {
+          // Maximizing turn
+          let bestMoveScore = -Infinity;
+          emptySquares.some((index) => {
+            boardState[index] = 'img/circle-red.svg';
+            moveScore = minimaxScore(boardState, depth + 1, alpha, beta, false);
+            boardState[index] = index;
+            bestMoveScore = Math.max(bestMoveScore, moveScore);
+            // Alpha-beta pruning
+            alpha = Math.max(alpha, bestMoveScore);
+            if (alpha >= beta) return true; // Prune this branch (stops evaluating other empty squares)
+          });
+          return bestMoveScore;
+        } else {
+          // Minimizing turn
+          let bestMoveScore = Infinity;
+          emptySquares.some((index) => {
+            boardState[index] = 'img/cross.svg';
+            moveScore = minimaxScore(boardState, depth + 1, alpha, beta, true);
+            boardState[index] = index;
+            bestMoveScore = Math.min(bestMoveScore, moveScore);
+            // Alpha-beta pruning
+            beta = Math.min(beta, bestMoveScore);
+            if (alpha >= beta) return true; // Prune this branch (stops evaluating other empty squares)
+          });
+          return bestMoveScore;
+        }
+      };
+    
+      const staticEvaluation = (roundResult, depth) => {
+        switch (roundResult) {
+          case 'img/circle-red.svg':
+            return 100 - depth;
+          case 'img/cross.svg':
+            return -100;
+          case 'It\'s a tie':
+            return 0;
+        }
+      };
+
     const makeRobotMove = () => {
-        const robotMove = getRandomMove();
-        setTimeout(() => {makeMove(robotMove);}, 1200);
+        let robotMove;
+
+        if(AIDifficulty === 'mid') {
+            robotMove = getBestMove();
+        } else {
+            robotMove = getRandomMove();
+        }
+
+        setTimeout(() => {
+            makeMove(robotMove)
+        }, 1400);
     };
 
     const makeMove = (index) => {
@@ -91,7 +167,7 @@ const displayController = (() => {
         const square = document.getElementById(`${index}`);
         gameBoard.addSignToBoard(index, currentPlayer);
         square.appendChild(img);
-        if(indicateTheWinner()) {
+        if(indicateTheWinner(gameBoard.board)) {
             showRoundResults();
         } else {
             animatePlayer();
@@ -100,18 +176,18 @@ const displayController = (() => {
         }
     };
 
-    const indicateTheWinner = () => {
+    const indicateTheWinner = (board) => {
         //'.some' searches for at least one combination that meets our criteria
         //'.every' checks every single combinations number, and if every number
         // inside of any combination contains the same sign it returns 'true',
         // and it means that '.every' found the winning combination.
         const isWinner = gameBoard.winningCombinations.some(combination => {
             return combination.every(index => {
-                return gameBoard.board[index] === currentPlayer;
+                return board[index] === currentPlayer;
             })
         });
 
-        const isTie = gameBoard.board.every(index => {
+        const isTie = board.every(index => {
             return typeof index !== 'number';
         })
 
@@ -137,7 +213,6 @@ const displayController = (() => {
     const aiLevels = document.querySelector('.ai-levels');
     const easyLevel = document.querySelector('.easy');
     const midLevel = document.querySelector('.mid');
-    const hardLevel = document.querySelector('.hard');
 
     //      PLAYERS ATTRIBUTES
     const playerOneInput = document.querySelector('.player-1-input');
@@ -179,7 +254,6 @@ const displayController = (() => {
 
     const showAIPrematch = () => {
         aiLevels.style.display = 'flex'
-        midLevel.classList.add('chosen-level');
         opponentFaces.forEach(face => {
             face.setAttribute('src', `${botPlayer.face}`);
         });
@@ -203,11 +277,9 @@ const displayController = (() => {
 
     const animateAILevels = (e) => {
         if(e.target.dataset.name === 'easy') {
-            addRemoveClass('chosen-level', easyLevel, midLevel, hardLevel);
+            addRemoveClass('chosen-level', easyLevel, midLevel);
         } else if(e.target.dataset.name === 'mid') {
-            addRemoveClass('chosen-level', midLevel, easyLevel, hardLevel);
-        } else if(e.target.dataset.name === 'hard') {
-            addRemoveClass('chosen-level', hardLevel, easyLevel, midLevel);
+            addRemoveClass('chosen-level', midLevel, easyLevel);
         }
     };
 
@@ -247,9 +319,9 @@ const displayController = (() => {
         } else if(midLevel.classList.contains('chosen-level')) {
             addRemoveClass('mid', aiLevel);
             aiLevel.textContent = 'MID';
-        } else if(hardLevel.classList.contains('chosen-level')) {
-            aiLevel.classList.add('hard');
-            aiLevel.textContent = 'HARD';
+        } else {
+            addRemoveClass('easy', aiLevel);
+            aiLevel.textContent = 'EASY';
         }
     };
 
@@ -268,24 +340,24 @@ const displayController = (() => {
         overlay.style.display = 'flex';
         nextRoundBtn.style.display = 'flex';
         resetScoreBtn.style.display = 'flex';
-        if(indicateTheWinner() === playerOne.sign) {
+        if(indicateTheWinner(gameBoard.board) === playerOne.sign) {
             setColor('var(--purple)', winnerName);
             winnerName.textContent = playerOne.name;
             winnerText.textContent = 'Wins!';
             playerOneScore += 1;
-        } else if(indicateTheWinner() === playerTwo.sign){
+        } else if(indicateTheWinner(gameBoard.board) === playerTwo.sign){
             setColor('var(--blue)', winnerName);
             winnerName.textContent = playerTwo.name;
             winnerText.textContent = 'Wins!';
             playerTwoScore += 1;
-        } else if(indicateTheWinner() === botPlayer.sign) {
+        } else if(indicateTheWinner(gameBoard.board) === botPlayer.sign) {
             setColor('var(--red)', winnerName);
             winnerName.textContent = 'Robot';
             winnerText.textContent = 'Wins!';
             playerTwoScore += 1;
-        } else if (indicateTheWinner() === 'It\'s a tie'){
+        } else if (indicateTheWinner(gameBoard.board) === 'It\'s a tie'){
             winnerName.textContent = '';
-            winnerText.textContent = indicateTheWinner();
+            winnerText.textContent = indicateTheWinner(gameBoard.board);
         }
         playerOneWins.textContent = `Wins: ${playerOneScore}`;
         smallPlayerOneWins.textContent = playerOneScore;
@@ -345,8 +417,8 @@ const displayController = (() => {
         menu.style.display = 'flex';
         playerOneInput.value = '';
         playerTwoInput.value = '';
-        removeClass('chosen-level', easyLevel, midLevel, hardLevel, 
-                                    smallPlayerOneInfo, smallOpponentInfo);
+        removeClass('chosen-level', easyLevel, midLevel, smallPlayerOneInfo,
+                                    smallOpponentInfo);
         // playerTwo.sign is applied to get playerOne.sign in current player
         currentPlayer = '';
         opponentStarts = false;
@@ -386,9 +458,15 @@ const displayController = (() => {
         });
     });
 
-    easyLevel.onclick = e => animateAILevels(e);
-    midLevel.onclick = e => animateAILevels(e);
-    hardLevel.onclick = e => animateAILevels(e);
+    easyLevel.addEventListener('click', (e) => {
+        AIDifficulty = 'easy'
+        animateAILevels(e);
+    });
+
+    midLevel.addEventListener('click', (e) => {
+        AIDifficulty = 'mid'
+        animateAILevels(e);
+    });
 
     fightBtn.addEventListener('click', () => {
         playMode.style.display = 'none';

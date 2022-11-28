@@ -186,12 +186,13 @@ input[placeholder$='2']::placeholder{
 
 .ai-levels {
     display: none; /*flex*/
-    justify-content: space-between;
+    justify-content: space-evenly;
     width: 100%;
     grid-column: 1 / 4;
 }
 
-.easy, .mid, .hard,
+.easy, 
+.mid,
 .fight-button {
     cursor: pointer;
     border: 4px solid var(--dark-blue);
@@ -199,8 +200,7 @@ input[placeholder$='2']::placeholder{
 }
 
 .easy, 
-.mid, 
-.hard {
+.mid {
     color: white;
     text-shadow: var(--bald-shadow);
     font-size: var(--font-16px);
@@ -216,11 +216,8 @@ input[placeholder$='2']::placeholder{
     background-color: var(--orange);
 }
 
-.hard {
-    background-color: var(--dark-red);
-}
-
-.easy:hover, .mid:hover, .hard:hover,
+.easy:hover,
+.mid:hover,
 .chosen-level {
     filter: brightness(100%);
     animation: moveUpDown 0.75s ease-in-out infinite;
